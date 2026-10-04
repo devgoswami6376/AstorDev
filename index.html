@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astro Dev — AI Astrology Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#ffffff;--black2:#fffaf0;--green:#f2b900;--green2:#d99f00;--green-dark:#7a5700;--white:#171717;--muted:#6f6f6f;--card:#ffffff;--border:rgba(0,0,0,.10);--gold:#f2b900}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:"DM Sans",sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;transition:font-family .25s}body.hindi-mode,body.hindi-mode *{font-family:"Noto Sans Devanagari",sans-serif!important}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:18px 6%;display:flex;align-items:center;justify-content:space-between;background:rgba(8,11,9,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}.logo{font-size:22px;font-weight:700;letter-spacing:-.5px}.logo span{color:var(--green)}.nav-right{display:flex;align-items:center;gap:12px}.lang-btn{background:rgba(99,211,145,.08);border:1px solid rgba(99,211,145,.25);color:var(--green);padding:8px 15px;border-radius:30px;font-size:13px;font-weight:600}.nav-cta{background:var(--green);color:#071009;border:0;padding:10px 17px;border-radius:30px;font-weight:700;font-size:13px}
+.hero{min-height:100vh;padding:150px 6% 90px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center}.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(53,169,103,.16),transparent 68%);top:5%;left:50%;transform:translateX(-50%);pointer-events:none}.stars{position:absolute;inset:0;pointer-events:none;opacity:.7;background-image:radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1px),radial-gradient(circle,rgba(99,211,145,.5) 1px,transparent 1px);background-size:95px 95px,145px 145px;background-position:10px 20px,50px 80px}.hero-content{position:relative;max-width:850px;z-index:2}.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid rgba(99,211,145,.22);background:rgba(99,211,145,.07);color:var(--green);border-radius:50px;font-size:12px;font-weight:600;margin-bottom:25px}.badge-dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green)}.hero h1{font-family:"Playfair Display",serif;font-size:clamp(48px,8vw,88px);line-height:1.03;letter-spacing:-3px;margin-bottom:25px}.hero h1 span{color:var(--green)}.hero p{max-width:620px;margin:0 auto;color:var(--muted);font-size:17px;line-height:1.7}.hero-actions{margin-top:35px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.primary-btn{background:var(--green);color:#071009;border:0;padding:15px 25px;border-radius:12px;font-weight:700;transition:.25s}.primary-btn:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(99,211,145,.18)}.secondary-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);color:#fff;padding:15px 25px;border-radius:12px;font-weight:600}.hero-note{margin-top:18px;font-size:12px;color:#748078}
+.section{padding:100px 6%}.section-head{max-width:700px;margin:0 auto 50px;text-align:center}.eyebrow{color:var(--green);text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:700;margin-bottom:14px}.section-head h2{font-family:"Playfair Display",serif;font-size:clamp(34px,5vw,55px);line-height:1.1;margin-bottom:15px}.section-head p{color:var(--muted);line-height:1.7}
+.topics-section{background:var(--black2)}.topic-grid{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.topic-card{padding:27px;background:var(--card);border:1px solid var(--border);border-radius:18px;transition:.25s}.topic-card:hover{border-color:rgba(99,211,145,.3);transform:translateY(-3px)}.topic-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(99,211,145,.09);color:var(--green);font-size:21px;margin-bottom:18px}.topic-card h3{font-size:17px;margin-bottom:8px}.topic-card p{color:var(--muted);font-size:13px;line-height:1.6}
+.steps{max-width:1000px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.step-card{position:relative;padding:30px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,#101510,#0d110e)}.step-number{color:var(--green);font-size:13px;font-weight:700;margin-bottom:22px}.step-card h3{font-size:18px;margin-bottom:10px}.step-card p{color:var(--muted);font-size:13px;line-height:1.7}
+.final-cta{padding:110px 6%;background:radial-gradient(circle at 50% 30%,rgba(53,169,103,.15),transparent 55%),var(--black2);text-align:center}.final-cta-inner{max-width:720px;margin:auto}.final-cta h2{font-family:"Playfair Display",serif;font-size:clamp(38px,6vw,62px);line-height:1.1;margin-bottom:20px}.final-cta p{color:var(--muted);line-height:1.7;margin-bottom:28px}
+.faq{max-width:800px;margin:auto}.faq-item{border-bottom:1px solid var(--border)}.faq-question{width:100%;background:none;border:0;color:#fff;padding:22px 0;text-align:left;display:flex;justify-content:space-between;align-items:center;font-weight:600}.faq-question span:last-child{color:var(--green);font-size:20px}.faq-answer{display:none;color:var(--muted);font-size:14px;line-height:1.7;padding:0 0 22px}.faq-item.open .faq-answer{display:block}
+footer{padding:35px 6%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:20px;color:#748078;font-size:12px}.footer-logo{color:#fff;font-weight:700}.footer-logo span{color:var(--green)}
+#wizardOverlay{position:fixed;inset:0;z-index:3000;display:none;padding:70px 12px 20px;min-height:100dvh;background:rgba(5,8,6,.97);backdrop-filter:blur(20px)}#wizardOverlay.active{display:block}.chat-shell{max-width:620px;height:calc(100dvh - 90px);min-height:0;margin:auto;display:flex}.chat-box{width:100%;height:100%;background:#0d120f;border:1px solid var(--border);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 100px rgba(0,0,0,.55)}.chat-top{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#101711}.chat-brand{font-weight:800;color:#fff}.chat-status{font-size:11px;color:#77847b;margin-top:4px;display:flex;align-items:center;gap:6px}.chat-status span:first-child{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 8px rgba(99,211,145,.6)}.close-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:19px}.chat-messages{flex:1;min-height:0;overflow-y:auto;padding:24px 18px 14px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}.chat-row{display:flex;margin:0 0 14px;animation:chatIn .28s ease}.chat-row.bot{justify-content:flex-start}.chat-row.user{justify-content:flex-end}.chat-bubble{max-width:82%;padding:13px 15px;border-radius:18px;font-size:14px;line-height:1.55}.chat-row.bot .chat-bubble{background:#182019;border:1px solid rgba(255,255,255,.06);border-bottom-left-radius:5px;color:#eef4ef}.chat-row.user .chat-bubble{background:var(--green);color:#071009;border-bottom-right-radius:5px;font-weight:600}.chat-label{font-size:10px;color:#657169;margin:0 0 5px 4px}.chat-row.user .chat-label{text-align:right;margin-right:4px}.chat-typing{display:none;padding:0 20px 10px;gap:4px}.chat-typing.active{display:flex}.chat-typing span{width:6px;height:6px;background:#738078;border-radius:50%;animation:typing 1s infinite}.chat-typing span:nth-child(2){animation-delay:.15s}.chat-typing span:nth-child(3){animation-delay:.3s}@keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}@keyframes chatIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.chat-input-area{flex:0 0 auto;position:relative;z-index:20;padding:12px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:#101711;box-shadow:0 -8px 24px rgba(0,0,0,.16)}.chat-input-row{display:flex;gap:8px;align-items:center}.chat-text-input{flex:1;min-width:0;background:#080c09;border:1px solid var(--border);color:#fff;padding:14px 15px;border-radius:15px;outline:none;font-size:14px}.chat-text-input:focus{border-color:rgba(99,211,145,.55)}.chat-send{width:46px;height:46px;border:0;border-radius:14px;background:var(--green);color:#071009;font-size:18px;font-weight:800}.chat-choice-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.chat-choice{background:#080c09;border:1px solid var(--border);color:#e8eee9;padding:13px 12px;border-radius:13px;text-align:left;font-weight:600;cursor:pointer}.chat-choice:hover{border-color:rgba(99,211,145,.55);background:rgba(99,211,145,.06)}.chat-choice.selected{border-color:rgba(99,211,145,.85)!important;background:rgba(99,211,145,.12)!important}.gender-send-wrap{display:flex;justify-content:flex-end;margin-top:10px}.gender-send-btn{width:auto!important;padding:0 20px!important}.gender-send-btn:disabled{opacity:.35;cursor:not-allowed}.gender-send-btn:not(:disabled){opacity:1;box-shadow:0 6px 18px rgba(99,211,145,.18)}.chat-hint{text-align:center;color:#68736c;font-size:10px;margin-top:7px}.chat-date-input,.chat-time-input{color-scheme:dark}.chat-date-input::-webkit-calendar-picker-indicator,.chat-time-input::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.7}@media(max-width:600px){#wizardOverlay{padding:0;min-height:0;height:var(--chat-vh,100dvh);overflow:hidden}.chat-shell{height:100%;min-height:0}.chat-box{height:100%;min-height:0;border-radius:0;border:0}.chat-messages{min-height:0;overflow-y:auto;padding:16px 14px 10px}.chat-bubble{max-width:88%}.chat-input-area{padding-bottom:max(10px,env(safe-area-inset-bottom));}.chat-text-input{font-size:16px;}body.chat-keyboard-open #wizardOverlay{height:var(--chat-vh,100dvh)}body.chat-keyboard-open .chat-messages{scroll-padding-bottom:12px}}
+#loadingScreen{position:fixed;inset:0;z-index:4000;background:#080b09;display:none;align-items:center;justify-content:center;text-align:center;padding:25px}#loadingScreen.active{display:flex}.loading-inner{max-width:450px}.loader-ring{width:75px;height:75px;margin:0 auto 28px;border-radius:50%;border:3px solid rgba(99,211,145,.15);border-top-color:var(--green);animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading-inner h2{font-family:"Playfair Display",serif;font-size:31px;margin-bottom:12px}.loading-inner p{color:var(--muted);line-height:1.7}
+#reportScreen{position:fixed;inset:0;z-index:4500;display:none;overflow-y:auto;background:#080b09;padding:80px 16px 50px}#reportScreen.active{display:block}.report-container{max-width:850px;margin:auto}.report-header{text-align:center;margin-bottom:35px}.report-small{color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700}.report-header h2{font-family:"Playfair Display",serif;font-size:44px;margin:12px 0}.report-header p{color:var(--muted);font-size:13px}.report-card{background:#101510;border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:16px}.score-area{display:flex;align-items:center;gap:28px}.score-ring{width:130px;height:130px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:conic-gradient(var(--green) 0deg,#222923 0deg);position:relative}.score-ring:before{content:"";position:absolute;width:103px;height:103px;background:#101510;border-radius:50%}.score-number{position:relative;z-index:2;font-size:30px;font-weight:700}.score-text h3{font-size:20px;margin-bottom:8px}.score-text p{color:var(--muted);line-height:1.7;font-size:13px}.insight-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.insight{background:#0a0e0b;border:1px solid var(--border);border-radius:14px;padding:18px}.insight-title{color:var(--green);font-size:12px;font-weight:700;margin-bottom:8px}.insight p{color:#aeb8b1;font-size:13px;line-height:1.6}.report-close{display:block;margin:25px auto 0;background:var(--green);color:#071009;border:0;padding:14px 25px;border-radius:12px;font-weight:700}
+.report-buy-bar{position:fixed;right:18px;bottom:18px;z-index:4700;display:flex;flex-direction:column;gap:8px;width:min(310px,calc(100vw - 36px));padding:7px;background:rgba(255,255,255,.96);border:1px solid rgba(242,185,0,.35);border-radius:15px;box-shadow:0 12px 35px rgba(0,0,0,.16);backdrop-filter:blur(12px)}.report-buy-btn{width:100%;border:0;border-radius:10px;padding:12px 14px;font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer}.report-buy-basic{background:#fff8df;color:#8a6200;border:1px solid rgba(242,185,0,.35)}.report-buy-premium{background:#f2b900;color:#171717}.report-buy-btn:hover{transform:translateY(-1px)}
+
+@media(max-width:800px){.topic-grid,.steps{grid-template-columns:1fr 1fr}.hero h1{letter-spacing:-2px}.wizard-box{padding:25px 20px}}@media(max-width:600px){nav{padding:15px 4%}.nav-cta{display:none}.hero{padding:130px 5% 70px}.hero h1{font-size:46px}.hero p{font-size:15px}.section{padding:75px 5%}.topic-grid,.steps,.choice-grid,.topic-choice-grid,.insight-grid{grid-template-columns:1fr}.wizard-step h2{font-size:30px}.wizard-shell{min-height:auto}.wizard-actions{flex-direction:column-reverse}.continue-btn,.back-btn{width:100%;margin:0}.score-area{flex-direction:column;text-align:center}footer{flex-direction:column;text-align:center}}
+
+.payment-card{width:100%;max-width:100%;background:#101510;border:1px solid rgba(99,211,145,.22);border-radius:18px;padding:20px;margin-top:10px;text-align:center;box-shadow:0 10px 35px rgba(0,0,0,.2)}
+.payment-price{font-size:34px;font-weight:800;color:var(--green);margin-bottom:4px}.payment-title{font-size:17px;font-weight:700}.payment-sub{color:var(--muted);font-size:12px;margin:5px 0 15px}.payment-btn,.payment-done-btn{border:0;border-radius:11px;padding:13px 18px;font-weight:800;cursor:pointer}.payment-btn{width:100%;background:var(--green);color:#071009;font-size:15px}.payment-confirm{display:block;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}.payment-done-btn{margin-top:8px;background:#fff;color:#08100b;width:100%;font-size:13px}.payment-note{font-size:10px;color:#78837c;line-height:1.5;margin-top:10px}.payment-wait-card{text-align:center}.payment-wait-dots{display:flex;justify-content:center;gap:6px;margin-top:14px}.payment-wait-dots span{width:7px;height:7px;border-radius:50%;background:var(--green);animation:paydot 1s infinite ease-in-out}.payment-wait-dots span:nth-child(2){animation-delay:.15s}.payment-wait-dots span:nth-child(3){animation-delay:.3s}.payment-success-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;margin:0 auto 8px;background:rgba(99,211,145,.14);color:var(--green);font-size:23px;font-weight:900}@keyframes paydot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.plan-stack{display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.plan-card{border:1px solid var(--border);border-radius:18px;padding:20px;text-align:left;background:#101510;box-shadow:0 12px 35px rgba(0,0,0,.18)}
+.plan-card.basic{border-color:rgba(99,211,145,.25)}
+.plan-card.premium{border:1px solid rgba(255,210,85,.45);background:linear-gradient(145deg,#17120a,#101510 72%);box-shadow:0 15px 45px rgba(217,197,139,.10)}
+.plan-badge{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:800;letter-spacing:.6px;margin-bottom:10px}
+.basic .plan-badge{background:rgba(99,211,145,.12);color:var(--green)}
+.premium .plan-badge{background:rgba(255,210,85,.13);color:#f4d36b}
+.plan-price{font-size:34px;font-weight:900;margin:2px 0 4px}.basic .plan-price{color:var(--green)}.premium .plan-price{color:#f7d66c}
+.plan-old{font-size:14px;color:#69736d;text-decoration:line-through;margin-left:6px;font-weight:600}.plan-title{font-size:18px;font-weight:800;margin-bottom:5px}.plan-sub{font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:13px}
+.plan-features{list-style:none;display:grid;gap:8px;margin:0 0 15px;padding:0}.plan-features li{font-size:12px;color:#d7ddd9;line-height:1.45}.premium .plan-features li{color:#eee9d8}
+.plan-btn{width:100%;border:0;border-radius:12px;padding:14px 16px;font-weight:900;font-size:14px;cursor:pointer}.basic .plan-btn{background:var(--green);color:#071009}.premium .plan-btn{background:linear-gradient(90deg,#e7b93f,#ffe078);color:#191207;box-shadow:0 8px 25px rgba(255,211,87,.18)}
+.plan-note{font-size:10px;color:#78837c;line-height:1.5;margin-top:10px;text-align:center}.payment-choice-note{text-align:center;color:#aeb8b1;font-size:12px;line-height:1.6;margin:0 0 12px}
+.premium-only{display:none}.premium-active .premium-only{display:block}.premium-active #premiumDeepAnalysis{display:block !important}
+.basic-included-note{color:var(--muted);font-size:12px;line-height:1.6;margin:-4px 0 14px}.basic-included-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.basic-included-grid .deep-card{min-height:120px}.deep-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.deep-card{background:#0a0e0b;border:1px solid rgba(255,210,85,.14);border-radius:14px;padding:16px}.deep-card h4{color:#f0cc62;font-size:12px;margin:0 0 8px}.deep-card p{color:#b7c0ba;font-size:13px;line-height:1.65;margin:0}
+.timeline{display:grid;gap:10px}.timeline-row{display:grid;grid-template-columns:70px 1fr;gap:12px;align-items:start;padding:12px;border-radius:12px;background:#0a0e0b;border:1px solid var(--border)}.timeline-year{font-weight:900;color:#f0cc62}.timeline-row p{margin:0;color:#b7c0ba;font-size:12px;line-height:1.55}
+@media(max-width:600px){.deep-grid{grid-template-columns:1fr}.plan-card{padding:17px}}
+@media(max-width:600px){.report-buy-bar{right:10px;bottom:10px;left:10px;width:auto;padding:6px;gap:6px}.report-buy-btn{padding:11px 8px;font-size:11px}}
+
+.score-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.score-mini{background:#0a0e0b;border:1px solid var(--border);border-radius:14px;padding:17px}.score-mini-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.score-mini-name{font-size:12px;color:#aeb8b1;font-weight:700}.score-mini-value{font-size:20px;color:var(--green);font-weight:800}.score-bar{height:5px;background:#252c27;border-radius:99px;overflow:hidden;margin-top:10px}.score-bar span{display:block;height:100%;background:var(--green);border-radius:99px}
+@media(max-width:600px){.score-list{grid-template-columns:1fr 1fr}.payment-card{padding:17px}.report-header h2{font-size:34px}.score-area{gap:18px}.score-ring{width:110px;height:110px}.score-ring:before{width:87px;height:87px}}
+
+/* White + Yellow theme */
+body{background:#fff;color:#171717}
+nav{background:rgba(255,255,255,.92);border-bottom:1px solid rgba(0,0,0,.08)}
+.logo{color:#171717}.logo span,.eyebrow,.step-number,.report-small{color:#e0a900!important}
+.lang-btn{background:#fff8df;border-color:#f2c84b;color:#a97800}.nav-cta,.primary-btn,.chat-send,.report-close{background:#f2b900;color:#171717}
+.hero{background:#fff}.hero-glow{background:radial-gradient(circle,rgba(242,185,0,.18),transparent 68%)}
+.stars{opacity:.45;background-image:radial-gradient(circle,rgba(242,185,0,.55) 1px,transparent 1px),radial-gradient(circle,rgba(0,0,0,.12) 1px,transparent 1px)}
+.badge{border-color:rgba(242,185,0,.35);background:#fff8df;color:#a97800}.badge-dot{background:#f2b900;box-shadow:0 0 12px rgba(242,185,0,.55)}
+.hero h1 span{color:#e0a900}.hero p,.section-head p,.topic-card p,.step-card p,.final-cta p{color:#6f6f6f}
+.secondary-btn{background:#fff;border-color:rgba(0,0,0,.12);color:#171717}.topics-section,.final-cta{background:#fffaf0}
+.topic-card,.step-card{background:#fff;border-color:rgba(0,0,0,.09);box-shadow:0 8px 25px rgba(0,0,0,.04)}
+.topic-card:hover{border-color:rgba(242,185,0,.55)}.topic-icon{background:#fff8df;color:#d69f00}
+.step-card{background:linear-gradient(145deg,#fff,#fffaf0)}
+.faq-question{color:#171717}.faq-question span:last-child{color:#d69f00}.faq-item{border-bottom-color:rgba(0,0,0,.10)}.faq-answer{color:#6f6f6f}
+footer{border-top-color:rgba(0,0,0,.09);color:#777}.footer-logo{color:#171717}.footer-logo span{color:#e0a900}
+#wizardOverlay{background:rgba(255,255,255,.96)}.chat-box{background:#fff;border-color:rgba(0,0,0,.10);box-shadow:0 30px 100px rgba(0,0,0,.15)}.chat-top,.chat-input-area{background:#fffaf0;border-color:rgba(0,0,0,.08)}.chat-brand{color:#171717}.chat-status{color:#777}.chat-status span:first-child{background:#f2b900;box-shadow:0 0 8px rgba(242,185,0,.45)}.close-btn{background:#fff;border-color:rgba(0,0,0,.10);color:#171717}
+.chat-row.bot .chat-bubble{background:#fffaf0;border-color:rgba(0,0,0,.08);color:#333}.chat-row.user .chat-bubble{background:#f2b900;color:#171717}.chat-label{color:#888}.chat-text-input{background:#fff;border-color:rgba(0,0,0,.13);color:#171717}.chat-text-input:focus{border-color:#f2b900}.chat-choice{background:#fff;border-color:rgba(0,0,0,.12);color:#333}.chat-choice:hover{border-color:#f2b900;background:#fff8df}.chat-choice.selected{border-color:#e0a900!important;background:#fff4c9!important}.chat-date-input,.chat-time-input{color-scheme:light}
+#loadingScreen,#reportScreen{background:#fff}.loader-ring{border-color:rgba(242,185,0,.18);border-top-color:#f2b900}.loading-inner p,.report-header p,.score-text p{color:#6f6f6f}.report-card{background:#fff;border-color:rgba(0,0,0,.09);box-shadow:0 8px 25px rgba(0,0,0,.04)}.score-ring{background:conic-gradient(#f2b900 0deg,#eee 0deg)}.score-ring:before{background:#fff}.insight{background:#fffaf0;border-color:rgba(0,0,0,.08)}.insight p{color:#5f5f5f}.insight-title{color:#d69f00}.score-mini{background:#fffaf0;border-color:rgba(0,0,0,.08)}.score-mini-name{color:#666}.score-mini-value{color:#d69f00}.score-bar{background:#eee}.score-bar span{background:#f2b900}
+.payment-card,.plan-card{background:#fff;border-color:rgba(0,0,0,.10);box-shadow:0 10px 35px rgba(0,0,0,.07)}.payment-price,.basic .plan-price,.premium .plan-price{color:#d69f00}.payment-sub,.plan-sub,.plan-note,.payment-choice-note,.payment-note{color:#777}.payment-done-btn{background:#fff8df;color:#5b4300}.premium .plan-card{}.plan-card.premium{background:#fffaf0;border-color:rgba(242,185,0,.45)}.basic .plan-badge{background:#fff8df;color:#b07c00}.premium .plan-badge{background:#fff1b8;color:#9a6c00}.premium .plan-btn{background:linear-gradient(90deg,#eab400,#ffd95c);color:#332500}.plan-features li,.premium .plan-features li{color:#444}.deep-card,.timeline-row{background:#fffaf0;border-color:rgba(242,185,0,.22)}.deep-card h4,.timeline-year{color:#c48e00}.deep-card p,.timeline-row p{color:#555}
+
+/* Recent activity demo popup */
+.activity-toast{position:fixed;right:18px;top:18px;left:auto;bottom:auto;z-index:6000;width:min(285px,calc(100vw - 24px));display:flex;align-items:center;gap:8px;padding:9px 10px;background:#fff;border:1px solid rgba(242,185,0,.35);border-radius:15px;box-shadow:0 14px 40px rgba(0,0,0,.14);transform:translateY(25px);opacity:0;pointer-events:none;transition:opacity .28s ease,transform .28s ease}
+.activity-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.activity-icon{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:#fff4c9;color:#b77f00;font-weight:900}
+.activity-copy{min-width:0;display:grid;grid-template-columns:auto 1fr;column-gap:4px;align-items:baseline;font-size:12px;color:#333}
+.activity-copy strong{font-size:12px;color:#171717}.activity-copy span{color:#555;font-size:11px}.activity-copy small{grid-column:1/-1;color:#999;font-size:9px;margin-top:1px}
+.activity-close{margin-left:auto;width:25px;height:25px;border:0;background:transparent;color:#888;font-size:19px;line-height:1}
+@media(max-width:600px){.activity-toast{right:12px;top:12px;left:auto;bottom:auto;width:min(285px,calc(100vw - 24px))}}
+
+.preview-screen{position:fixed;inset:0;z-index:4300;display:none;overflow-y:auto;background:#fff;padding:78px 14px 45px}
+.preview-screen.active{display:block}
+.preview-container{width:min(850px,100%);margin:auto}
+.preview-header{text-align:center;margin:0 auto 24px}
+.preview-header .preview-kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:#d69f00}
+.preview-header h2{font-family:"Playfair Display",serif;font-size:clamp(34px,7vw,52px);line-height:1.05;margin:10px 0}
+.preview-header p{color:#777;font-size:14px;line-height:1.6;margin:0 auto;max-width:620px}
+.preview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+.locked-preview-card{position:relative;min-height:188px;border:1px solid rgba(0,0,0,.09);border-radius:22px;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.055);padding:24px 18px 20px;text-align:center;cursor:pointer;overflow:hidden;transition:.22s}
+.locked-preview-card:hover{transform:translateY(-2px);border-color:rgba(242,185,0,.55)}
+.locked-preview-card.featured{border-color:rgba(242,185,0,.42);box-shadow:0 10px 32px rgba(242,185,0,.10)}
+.preview-emoji{font-size:38px;line-height:1;margin:4px 0 18px}
+.preview-card-title{font-size:20px;font-weight:800;color:#687078;letter-spacing:.3px}
+.preview-blur{width:112px;height:18px;margin:15px auto 4px;border-radius:99px;background:linear-gradient(90deg,#f4d5dc,#fff1bf,#dff1df);filter:blur(5px);opacity:.95}
+.preview-blur.wide{width:145px}
+.preview-lock{position:absolute;right:16px;top:15px;font-size:23px;color:#c8cdd0}
+.preview-hint{margin-top:11px;font-size:11px;color:#999}
+.preview-plan-wrap{margin-top:28px;padding:22px;border:1px solid rgba(0,0,0,.08);border-radius:24px;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.045)}
+.preview-plan-title{text-align:center;font-size:25px;font-weight:900;color:#1c2328;margin-bottom:5px}
+.preview-plan-sub{text-align:center;color:#777;font-size:12px;line-height:1.6;margin-bottom:14px}
+.preview-plan-stack{display:flex;flex-direction:column;gap:14px}
+.preview-plan{border:1px solid rgba(0,0,0,.09);border-radius:18px;padding:19px;background:#fffaf0}
+.preview-plan.premium{border-color:rgba(242,185,0,.48);background:linear-gradient(145deg,#fffaf0,#fff)}
+.preview-plan .pp-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff1b8;color:#946a00;font-size:10px;font-weight:900;letter-spacing:.5px}
+.preview-plan.basic .pp-badge{background:#fff8df;color:#a87800}
+.preview-plan h3{font-size:18px;margin:9px 0 3px}.preview-price{font-size:31px;font-weight:900;color:#d69f00}.preview-plan p{font-size:12px;line-height:1.55;color:#777;margin:4px 0 12px}.preview-plan ul{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:7px}.preview-plan li{font-size:12px;color:#4f5356}.preview-plan button{width:100%;border:0;border-radius:12px;padding:13px;font-weight:900;background:#f2b900;color:#171717;cursor:pointer}.preview-plan.premium button{background:linear-gradient(90deg,#eab400,#ffd95c)}
+.preview-note{text-align:center;color:#999;font-size:10px;margin-top:14px;line-height:1.5}.preview-bottom-cta{position:relative;margin:20px 0 0;padding:12px 0 4px;background:#fff;z-index:5}.preview-bottom-cta button{width:100%;border:0;border-radius:999px;padding:15px;background:#f2b900;color:#171717;font-size:17px;font-weight:900;box-shadow:0 8px 24px rgba(242,185,0,.25);cursor:pointer}
+@media(max-width:600px){.preview-screen{padding:66px 12px 30px}.preview-grid{gap:10px}.locked-preview-card{min-height:170px;padding:21px 10px 17px}.preview-card-title{font-size:16px}.preview-emoji{font-size:32px}.preview-plan-wrap{padding:15px}.preview-plan{padding:16px}}
+.preview-buy-bar{position:fixed;right:18px;bottom:18px;z-index:4400;display:flex;flex-direction:column;gap:8px;width:min(310px,calc(100vw - 36px));pointer-events:none}.preview-buy-btn{width:100%;border:0;border-radius:13px;padding:14px 18px;font-size:15px;font-weight:900;white-space:nowrap;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.14);pointer-events:auto;transition:.2s}.preview-buy-btn:hover{transform:translateY(-1px)}.preview-buy-basic{background:#f2b900;color:#171717}.preview-buy-premium{background:linear-gradient(90deg,#eab400,#ffd95c);color:#171717}@media(max-width:600px){.preview-buy-bar{right:10px;bottom:10px;width:calc(100vw - 20px);gap:7px}.preview-buy-btn{padding:13px 15px;font-size:14px;border-radius:12px}}
+
+/* Astro Dev brand logo */
+.brand-logo{width:42px;height:42px;border-radius:50%;object-fit:cover;display:block;background:#fff;border:2px solid rgba(242,185,0,.45);box-shadow:0 5px 18px rgba(242,185,0,.18)}
+.nav-brand{display:flex;align-items:center;gap:9px}
+.hero-logo-wrap{display:flex;justify-content:center;margin:0 auto 20px}
+.hero-logo{width:104px;height:104px;border-radius:50%;object-fit:cover;background:#fff;border:4px solid #fff;box-shadow:0 10px 35px rgba(242,185,0,.28),0 0 0 3px rgba(242,185,0,.25)}
+.chat-brand-wrap{display:flex;align-items:center;gap:10px}
+.chat-brand-logo{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid rgba(242,185,0,.45);flex-shrink:0}
+.chat-bot-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;background:#fff;border:1.5px solid rgba(242,185,0,.4);flex-shrink:0;margin-top:19px}
+.chat-row.bot .chat-bubble-wrap{display:flex;align-items:flex-start;gap:8px;max-width:88%}
+@media(max-width:600px){.hero-logo{width:92px;height:92px}.hero-logo-wrap{margin-bottom:17px}.chat-bot-avatar{width:28px;height:28px}}
+
+</style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<nav>
+<div class="nav-brand" ondblclick="openAffiliatePortal()" title="Double-click Astro Dev for Affiliate"><img class="brand-logo" src="https://imgh.in/host/hyt1yd" alt="Astro Dev logo"><div class="logo">Astro <span>Dev</span></div></div>
+<div class="nav-right">
+<button class="lang-btn" onclick="openAffiliatePage()" title="Affiliate Login / Signup" aria-label="Affiliate Login / Signup">👤</button>
+<button class="lang-btn" id="langBtn" onclick="toggleLanguage()">हिंदी</button>
+<button class="nav-cta" onclick="openWizard()" data-en="Get Your Report" data-hi="मेरी रिपोर्ट पाएं">Get Your Report</button>
+</div>
+</nav>
+
+<header class="hero">
+<div class="stars"></div><div class="hero-glow"></div>
+<div class="hero-content">
+<div class="hero-logo-wrap"><img class="hero-logo" src="https://imgh.in/host/hyt1yd" alt="Astro Dev logo"></div>
+<div class="badge"><span class="badge-dot"></span><span data-en="AI-Powered Astrology Reading" data-hi="AI द्वारा ज्योतिषीय रीडिंग">AI-Powered Astrology Reading</span></div>
+<h1 data-en="Your future has a <span>story to tell.</span>" data-hi="आपके भविष्य की अपनी एक <span>कहानी है।</span>">Your future has a <span>story to tell.</span></h1>
+<p data-en="Discover a personalized astrology reading powered by AI. Explore your personality, relationships, career option and life path through a unique digital report." data-hi="AI द्वारा तैयार की गई आपकी व्यक्तिगत ज्योतिषीय रिपोर्ट प्राप्त करें। अपने व्यक्तित्व, रिश्तों, करियर और जीवन की दिशा के बारे में एक अनोखी डिजिटल रिपोर्ट जानें।">Discover a personalized astrology reading powered by AI. Explore your personality, relationships, career option and life path through a unique digital report.</p>
+<div class="hero-actions">
+<button class="primary-btn" onclick="openWizard()" data-en="Get Your Report →" data-hi="मेरी रिपोर्ट पाएं →">Get Your Report →</button>
+<button class="secondary-btn" onclick="document.getElementById('how').scrollIntoView()" data-en="How It Works" data-hi="यह कैसे काम करता है">How It Works</button>
+</div>
+<div class="hero-note" data-en="One-time digital report • No subscription" data-hi="एक बार की डिजिटल रिपोर्ट • कोई सब्सक्रिप्शन नहीं">One-time digital report • No subscription</div>
+</div>
+</header>
+
+<section class="section topics-section">
+<div class="section-head">
+<div class="eyebrow" data-en="Explore your path" data-hi="अपनी दिशा जानें">Explore your path</div>
+<h2 data-en="What do you want to know?" data-hi="आप क्या जानना चाहते हैं?">What do you want to know?</h2>
+<p data-en="Choose an area of your life and receive insights tailored to your selected topic." data-hi="अपने जीवन का कोई विषय चुनें और उसी के अनुसार तैयार की गई जानकारी प्राप्त करें।">Choose an area of your life and receive insights tailored to your selected topic.</p>
+</div>
+<div class="topic-grid">
+<div class="topic-card"><div class="topic-icon">♡</div><h3 data-en="Love Life" data-hi="प्रेम जीवन">Love Life</h3><p data-en="Explore emotional patterns, connection and relationship energy." data-hi="भावनात्मक पैटर्न, जुड़ाव और रिश्तों से जुड़ी ऊर्जा को समझें।">Explore emotional patterns, connection and relationship energy.</p></div>
+<div class="topic-card"><div class="topic-icon">↗</div><h3 data-en="Career Option" data-hi="करियर">Career Option</h3><p data-en="Discover themes around work, ambition and professional direction." data-hi="काम, महत्वाकांक्षा और पेशेवर दिशा से जुड़े संकेत जानें।">Discover themes around work, ambition and professional direction.</p></div>
+<div class="topic-card"><div class="topic-icon">₹</div><h3 data-en="Money & Wealth" data-hi="पैसा और धन">Money & Wealth</h3><p data-en="Reflect on your relationship with money, opportunities and financial habits." data-hi="पैसे के प्रति आपकी सोच, अवसरों और वित्तीय आदतों के बारे में जानें।">Reflect on your relationship with money, opportunities and financial habits.</p></div>
+<div class="topic-card"><div class="topic-icon">✦</div><h3 data-en="Your Personality" data-hi="व्यक्तित्व">Your Personality</h3><p data-en="Explore your strengths, tendencies and unique personality patterns." data-hi="अपनी खूबियों, आदतों और व्यक्तित्व के अनोखे पैटर्न को समझें।">Explore your strengths, tendencies and unique personality patterns.</p></div>
+<div class="topic-card"><div class="topic-icon">◌</div><h3 data-en="Future Partner" data-hi="भविष्य का साथी">Future Partner</h3><p data-en="Reflect on possible themes and directions that may shape your journey." data-hi="आपकी यात्रा को प्रभावित करने वाली संभावित दिशाओं और विषयों पर विचार करें।">Reflect on possible themes and directions that may shape your journey.</p></div>
+<div class="topic-card"><div class="topic-icon">✧</div><h3 data-en="Hidden Talent" data-hi="हिडन टैलेंट">Hidden Talent</h3><p data-en="Get a broader overview of your personality, life and current themes." data-hi="अपने व्यक्तित्व, जीवन और वर्तमान परिस्थितियों का एक व्यापक अवलोकन प्राप्त करें।">Get a broader overview of your personality, life and current themes.</p></div>
+</div>
+</section>
+
+<section class="section" id="how">
+<div class="section-head">
+<div class="eyebrow" data-en="Simple process" data-hi="सरल प्रक्रिया">Simple process</div>
+<h2 data-en="Your report in three steps." data-hi="आपकी रिपोर्ट केवल तीन चरणों में।">Your report in three steps.</h2>
+<p data-en="No complicated setup. Just answer a few questions and receive your personalized digital reading." data-hi="कोई जटिल प्रक्रिया नहीं। बस कुछ सवालों के जवाब दें और अपनी व्यक्तिगत डिजिटल रीडिंग प्राप्त करें।">No complicated setup. Just answer a few questions and receive your personalized digital reading.</p>
+</div>
+<div class="steps">
+<div class="step-card"><div class="step-number">01</div><h3 data-en="Tell us about you" data-hi="अपने बारे में बताएं">Tell us about you</h3><p data-en="Enter your basic birth details and choose what you want to explore." data-hi="अपनी जन्म से जुड़ी मूल जानकारी दें और चुनें कि आप क्या जानना चाहते हैं।">Enter your basic birth details and choose what you want to explore.</p></div>
+<div class="step-card"><div class="step-number">02</div><h3 data-en="Generate your reading" data-hi="अपनी रीडिंग तैयार करें">Generate your reading</h3><p data-en="Our AI creates a personalized digital interpretation based on the information you provide." data-hi="आपके द्वारा दी गई जानकारी के आधार पर AI आपकी व्यक्तिगत डिजिटल व्याख्या तैयार करता है।">Our AI creates a personalized digital interpretation based on the information you provide.</p></div>
+<div class="step-card"><div class="step-number">03</div><h3 data-en="Explore your report" data-hi="अपनी रिपोर्ट देखें">Explore your report</h3><p data-en="Read your insights, scores and personalized observations in one simple report." data-hi="एक सरल रिपोर्ट में अपनी जानकारी, स्कोर और व्यक्तिगत अवलोकन देखें।">Read your insights, scores and personalized observations in one simple report.</p></div>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head"><div class="eyebrow" data-en="Questions" data-hi="सवाल">Questions</div><h2 data-en="Frequently asked questions." data-hi="अक्सर पूछे जाने वाले सवाल।">Frequently asked questions.</h2></div>
+<div class="faq">
+<div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span data-en="What is Astro Dev?" data-hi="Astro Dev क्या है?">What is Astro Dev?</span><span>+</span></button><div class="faq-answer"><span data-en="Astro Dev is a digital AI-powered astrology reading experience that creates personalized reports from the information you provide." data-hi="Astro Dev एक डिजिटल AI-आधारित ज्योतिषीय रीडिंग सेवा है जो आपके द्वारा दी गई जानकारी के आधार पर व्यक्तिगत रिपोर्ट तैयार करती है।">Astro Dev is a digital AI-powered astrology reading experience that creates personalized reports from the information you provide.</span></div></div>
+<div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span data-en="How much does a report cost?" data-hi="एक रिपोर्ट की कीमत कितनी है?">How much does a report cost?</span><span>+</span></button><div class="faq-answer"><span data-en="The basic report is ₹49. A deeper Premium report is available for ₹99. Both are one-time payments." data-hi="बेसिक रिपोर्ट ₹49 की है। डीप प्रीमियम रिपोर्ट ₹99 की है। दोनों एक बार के भुगतान हैं।">The basic report is ₹49. A deeper Premium report is available for ₹99. Both are one-time payments.</span></div></div>
+<div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span data-en="How long does it take?" data-hi="रिपोर्ट तैयार होने में कितना समय लगता है?">How long does it take?</span><span>+</span></button><div class="faq-answer"><span data-en="Your digital report is generated after a short analysis animation. The experience is designed to take only a few seconds." data-hi="एक छोटी विश्लेषण प्रक्रिया के बाद आपकी डिजिटल रिपोर्ट तैयार होती है। पूरी प्रक्रिया केवल कुछ सेकंड में पूरी होने के लिए बनाई गई है।">Your digital report is generated after a short analysis animation. The experience is designed to take only a few seconds.</span></div></div>
+<div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span data-en="Is astrology scientifically proven?" data-hi="क्या ज्योतिष वैज्ञानिक रूप से सिद्ध है?">Is astrology scientifically proven?</span><span>+</span></button><div class="faq-answer"><span data-en="  " data-hi="  ">  </span></div></div>
+<div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span data-en="Is this a subscription?" data-hi="क्या यह सब्सक्रिप्शन है?">Is this a subscription?</span><span>+</span></button><div class="faq-answer"><span data-en="No. It is a one-time digital report." data-hi="नहीं। यह एक बार मिलने वाली डिजिटल रिपोर्ट है।">No. It is a one-time digital report.</span></div></div>
+</div>
+</section>
+
+<section class="final-cta">
+<div class="final-cta-inner">
+<div class="eyebrow" data-en="Ready?" data-hi="तैयार हैं?">Ready?</div>
+<h2 data-en="Your story starts with one question." data-hi="आपकी कहानी एक सवाल से शुरू होती है।">Your story starts with one question.</h2>
+<p data-en="Answer a few simple questions and explore your personalized AI astrology report." data-hi="कुछ आसान सवालों के जवाब दें और अपनी व्यक्तिगत AI ज्योतिषीय रिपोर्ट देखें।">Answer a few simple questions and explore your personalized AI astrology report.</p>
+<button class="primary-btn" onclick="openWizard()" data-en="Get Your Report →" data-hi="मेरी रिपोर्ट पाएं →">Get Your Report →</button>
+</div>
+</section>
+
+<footer><div><span class="footer-logo">Astro <span>Dev</span></span><span data-en=" — AI Astrology Reading" data-hi=" — AI ज्योतिषीय रीडिंग"> — AI Astrology Reading</span></div><div data-en="  " data-hi="केवल मनोरंजन और आत्म-चिंतन के लिए।">  </div></footer>
+
+<div id="affiliateOverlay" style="display:none;position:fixed;inset:0;z-index:7000;background:#fff;overflow:auto;padding:30px 16px"><div style="max-width:980px;margin:0 auto"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px"><div><div style="font-size:12px;color:#b07c00;font-weight:800;letter-spacing:1.5px">ASTRO DEV AFFILIATE</div><h2 style="margin-top:5px">Affiliate Partner Panel</h2></div><button onclick="closeAffiliatePortal()" style="border:1px solid #ddd;background:#fff;border-radius:10px;padding:9px 14px">× Close</button></div><div id="affiliateAuth" style="max-width:480px;margin:50px auto"></div><div id="affiliateDashboard" style="display:none"></div></div></div>
+
+<div id="wizardOverlay">
+<div class="chat-shell"><div class="chat-box">
+<div class="chat-top"><div class="chat-brand-wrap"><img class="chat-brand-logo" src="https://imgh.in/host/hyt1yd" alt="Astro Dev logo"><div><div class="chat-brand">Astro Dev</div><div class="chat-status"><span></span><span data-en="Personal astrology chat" data-hi="व्यक्तिगत ज्योतिष चैट">Personal astrology chat</span></div></div></div><button class="close-btn" onclick="closeWizard()">×</button></div>
+<div class="chat-messages" id="chatMessages"></div>
+<div class="chat-typing" id="chatTyping"><span></span><span></span><span></span></div>
+<div class="chat-input-area" id="chatInputArea"></div>
+</div></div></div>
+
+<div id="activityToast" class="activity-toast" aria-live="polite"><div class="activity-icon">✦</div><div class="activity-copy"><strong id="activityName">Rohan</strong><span id="activityText">just completed a reading</span><small id="activityTime">2 min ago</small></div><button class="activity-close" type="button" onclick="hideActivityToast()" aria-label="Close">×</button></div>
+
+<div id="previewScreen" class="preview-screen">
+<div class="preview-container">
+  <div class="preview-buy-bar" id="previewBuyBar" aria-label="Choose your report"><button type="button" class="preview-buy-btn preview-buy-basic" onclick="openPlanCheckout('basic')">Get Basic Report ₹49 →</button><button type="button" class="preview-buy-btn preview-buy-premium" onclick="openPlanCheckout('premium')">Get Premium Report ₹99 →</button></div>
+  <div class="preview-header">
+
+    <div class="preview-kicker">Astro Dev • Your Reading</div>
+    <h2 id="previewTitle">Your Reading Is Ready</h2>
+    <p id="previewSubtitle">Your answers have created a personalized preview. Unlock any card below to see your detailed result.</p>
+  </div>
+  <div class="preview-grid" id="previewGrid"></div>
+  <div class="report-card" style="margin-top:18px;text-align:center">
+    <div class="insight-title">FULL REPORT INCLUDES</div>
+    <p style="color:#555;line-height:1.7;font-size:13px">❤️ Love Life insights &nbsp; • &nbsp; 💼 Career Option &nbsp; • &nbsp; 💰 Money & Wealth &nbsp; • &nbsp; 🧠 Your Personality &nbsp; • &nbsp; 💍 Future Partner &nbsp; • &nbsp; ✨ Hidden Talent</p>
+  </div>
+  <div class="preview-plan-wrap" id="previewPlans">
+    <div class="preview-plan-title">Unlock Your Full Reading</div>
+    <div class="preview-plan-sub">Choose the level of detail you want. Both are one-time payments.</div>
+    <div class="preview-plan-stack">
+      <div class="preview-plan basic">
+        <span class="pp-badge">BASIC REPORT</span>
+        <div class="preview-price">₹49</div>
+        <h3>Personal Score Card</h3>
+        <p>Scores, lucky details and a personalized reading across the main areas of your life.</p>
+        <ul><li>✓ Love / Arrange Marriage</li><li>✓ Career & Money Flow</li><li>✓ Aura & Personality Trait</li><li>★ Hidden Talent</li><li>+ Lucky Colour & Day</li><li>❤Love Compatibility</li></ul>
+        <button type="button" onclick="openPlanCheckout('basic')">Unlock Basic — ₹49 →</button>
+        <div class="preview-note">One-time payment. No subscription</div>
+      </div>
+      <div class="preview-plan premium">
+        <span class="pp-badge">👑 PREMIUM • DEEP READING</span>
+        <div class="preview-price">₹99</div>
+        <h3>Deep Personalized Analysis</h3>
+        <p>Deep personalized insights across six important areas of your life.</p>
+        <ul><li>✓ Everything in Basic</li><li>❤ Relationship & Compat.</li><li>💰 Money Secret & Blockages</li><li>🧠 Deep Weakness + Strength</li><li>🔢 Deep Numerology Breakdown</li><li>📄 Downloadable PDF Report</li><li>🔮 5-Year Future Timeline</li></ul>
+        <button type="button" onclick="openPlanCheckout('premium')">👑 Unlock Premium — ₹99 →</button>
+      </div>
+    </div>
+    <div class="preview-note">One-time payment. No subscription</div>
+  </div>
+  
+</div>
+</div>
+<div id="loadingScreen"><div class="loading-inner"><div class="loader-ring"></div><h2 data-en="Reading your stars..." data-hi="आपके सितारों को पढ़ा जा रहा है...">Reading your stars...</h2><p data-en="Our AI is preparing your personalized astrology report." data-hi="हमारा AI आपकी व्यक्तिगत ज्योतिषीय रिपोर्ट तैयार कर रहा है।">Our AI is preparing your personalized astrology report.</p></div></div>
+
+<div id="reportScreen">
+<div class="report-container">
+<div class="report-header"><div class="report-small" data-en="Astro Dev • Personalized Reading" data-hi="Astro Dev • व्यक्तिगत रीडिंग">Astro Dev • Personalized Reading</div><h2 id="reportGreeting">Your Reading</h2><p id="reportId">Report ID: AD-00000000</p></div>
+<div class="report-card"><div class="score-area"><div class="score-ring" id="scoreRing"><div class="score-number" id="overallScore">82</div></div><div class="score-text"><h3 data-en="Overall Energy" data-hi="कुल ऊर्जा">Overall Energy</h3><p id="overallText">Your current reading shows a balanced pattern with several areas of growth and opportunity.</p></div></div></div>
+<div class="report-card basic-included-card">
+<div class="insight-title">BASIC ASTROLOGY — INCLUDED</div>
+<p class="basic-included-note">Your ₹49 Basic astrology is included in the ₹99 Premium report, so Premium customers can see the complete Basic reading on this same page.</p>
+<div class="basic-included-grid">
+<div class="deep-card"><h4>❤️ LOVE / ARRANGE MARRIAGE</h4><p id="basicLoveText">Your love-life reading and relationship energy.</p></div>
+<div class="deep-card"><h4>💼 CAREER & MONEY FLOW</h4><p id="basicCareerMoneyText">Your career and money-flow reading.</p></div>
+<div class="deep-card"><h4>🧠 AURA & PERSONALITY TRAIT</h4><p id="basicPersonalityText">Your aura and personality reading.</p></div>
+<div class="deep-card"><h4>★ HIDDEN TALENT</h4><p id="basicTalentText">Your hidden talent reading.</p></div>
+<div class="deep-card"><h4>🍀 LUCKY COLOUR & DAY</h4><p id="basicLuckyText">Your lucky colour, lucky day and number.</p></div>
+<div class="deep-card"><h4>❤️ LOVE COMPATIBILITY</h4><p id="basicCompatibilityText">Your love-compatibility reading.</p></div>
+</div>
+</div>
+<div class="report-card" id="premiumDeepAnalysis" style="display:none"><div class="insight-title" data-en="PREMIUM DEEP ANALYSIS" data-hi="प्रीमियम डीप एनालिसिस">PREMIUM DEEP ANALYSIS</div><div class="deep-grid">
+<div class="deep-card"><h4 data-en="LOVE LIFE" data-hi="रिश्ता और अनुकूलता">LOVE LIFE</h4><p id="premiumRelationship"></p></div>
+<div class="deep-card"><h4 data-en="MONEY & WEALTH" data-hi="पैसे के पैटर्न और रुकावटें">MONEY & WEALTH</h4><p id="premiumMoney"></p></div>
+<div class="deep-card"><h4 data-en="DEEP STRENGTH" data-hi="गहरी ताकत">DEEP STRENGTH</h4><p id="premiumStrength"></p></div>
+<div class="deep-card"><h4 data-en="WEAKNESS TO WATCH" data-hi="ध्यान देने योग्य कमजोरी">WEAKNESS TO WATCH</h4><p id="premiumWeakness"></p></div>
+<div class="deep-card"><h4 data-en="NUMEROLOGY BREAKDOWN" data-hi="न्यूमरोलॉजी ब्रेकडाउन">NUMEROLOGY BREAKDOWN</h4><p id="premiumNumerology"></p></div>
+<div class="deep-card"><h4 data-en="KEY LIFE THEME" data-hi="मुख्य जीवन थीम">KEY LIFE THEME</h4><p id="premiumTheme"></p></div>
+</div></div>
+<div class="premium-only" id="premiumTimelineCard"><div class="report-card"><div class="insight-title" data-en="5-YEAR FUTURE TIMELINE" data-hi="5 साल की भविष्य समयरेखा">5-YEAR FUTURE TIMELINE</div><div class="timeline" id="premiumTimeline"></div></div></div>
+<div class="report-card"><div class="insight-title" data-en="YOUR ENERGY SCORES" data-hi="आपके ऊर्जा स्कोर">YOUR ENERGY SCORES</div><div class="score-list">
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="LOVE" data-hi="प्रेम">LOVE</span><span class="score-mini-value" id="loveScore">84%</span></div><div class="score-bar"><span id="loveBar" style="width:84%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="CAREER OPTION" data-hi="करियर">CAREER OPTION</span><span class="score-mini-value" id="careerScore">78%</span></div><div class="score-bar"><span id="careerBar" style="width:78%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="MONEY" data-hi="पैसा">MONEY</span><span class="score-mini-value" id="moneyScore">81%</span></div><div class="score-bar"><span id="moneyBar" style="width:81%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="YOUR PERSONALITY" data-hi="व्यक्तित्व">YOUR PERSONALITY</span><span class="score-mini-value" id="personalityScore">88%</span></div><div class="score-bar"><span id="personalityBar" style="width:88%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="AURA" data-hi="आभा">AURA</span><span class="score-mini-value" id="auraScore">90%</span></div><div class="score-bar"><span id="auraBar" style="width:90%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="SOCIAL ENERGY" data-hi="सामाजिक ऊर्जा">SOCIAL ENERGY</span><span class="score-mini-value" id="socialScore">83%</span></div><div class="score-bar"><span id="socialBar" style="width:83%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="INTUITION" data-hi="अंतर्ज्ञान">INTUITION</span><span class="score-mini-value" id="intuitionScore">86%</span></div><div class="score-bar"><span id="intuitionBar" style="width:86%"></span></div></div>
+<div class="score-mini"><div class="score-mini-top"><span class="score-mini-name" data-en="GROWTH" data-hi="विकास">GROWTH</span><span class="score-mini-value" id="growthScore">89%</span></div><div class="score-bar"><span id="growthBar" style="width:89%"></span></div></div>
+</div></div>
+<div class="report-card"><div class="insight-grid">
+<div class="insight"><div class="insight-title" data-en="LUCKY NUMBER" data-hi="भाग्यशाली अंक">LUCKY NUMBER</div><p id="luckyNumber">7</p></div>
+<div class="insight"><div class="insight-title" data-en="LUCKY DAY" data-hi="भाग्यशाली दिन">LUCKY DAY</div><p id="luckyDay">Thursday</p></div>
+<div class="insight"><div class="insight-title" data-en="LUCKY COLOR" data-hi="भाग्यशाली रंग">LUCKY COLOR</div><p id="luckyColor">Green</p></div>
+<div class="insight"><div class="insight-title" data-en="FOCUS" data-hi="ध्यान">FOCUS</div><p id="focusText">Consistency</p></div>
+</div></div>
+<div class="report-card" id="personalInsightCard"><div class="insight-title" data-en="PERSONALIZED INSIGHT" data-hi="व्यक्तिगत जानकारी">PERSONALIZED INSIGHT</div><p id="personalInsight" style="color:#aeb8b1;line-height:1.8;font-size:14px;">Your report suggests a period where consistency, self-awareness and clear decisions may become especially important.</p></div>
+<div class="report-card" style="text-align:center;color:#707b73;font-size:11px;line-height:1.7"><span data-en="  " data-hi="  ">  </span></div>
+<button class="report-close" onclick="closeReport()" data-en="Close Report" data-hi="रिपोर्ट बंद करें">Close Report</button>
+</div></div>
+
+<script>
+/* Premium personalization: each deep-analysis field independently selects one of 10 prepared variants. */
+/* Razorpay Test Mode
+   IMPORTANT:
+   - Key ID is safe to put in frontend.
+   - NEVER put RAZORPAY_KEY_SECRET here.
+   - Replace YOUR_SUPABASE_PROJECT_REF with your Supabase project ref.
+*/
+const RAZORPAY_KEY_ID="rzp_live_Tjkc3H9XvLZ9Xg";
+const RAZORPAY_PAYMENT_FUNCTION="https://fctitrkafbdrhyhqwdbw.supabase.co/functions/v1/razorpay-payment";
+const SUPABASE_URL="https://fctitrkafbdrhyhqwdbw.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_X7iVN_OiKZcQA9-vLv-hLg_0t-lAA6Y";
+const AFFILIATE_SIGNUP_FUNCTION=SUPABASE_URL+"/functions/v1/affiliate-signup";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let affiliateMode="login";
+let adminPasswordSession="";
+let affiliateRef=new URLSearchParams(location.search).get("ref")||localStorage.getItem("astro_affiliate_ref")||"";
+if(affiliateRef)localStorage.setItem("astro_affiliate_ref",affiliateRef);
+let pendingReportId="";
+let selectedPlan="basic";
+let currentLang="en",currentStep=0;
+let directPaymentOpen=false;
+
+const userData={name:"",gender:"",dob:"",topic:""};
+const translations={
+en:{greeting:"Your Personalized Reading",reportId:"Report ID",overall:{
+Love:"Your relationship energy suggests a period of emotional awareness and deeper communication.",
+"Career Option":"Your career option pattern highlights consistency, learning and taking calculated opportunities.",
+Money:"Your financial theme points toward discipline, patience and careful decisions.",
+"Your Personality":"Your personality reading highlights curiosity, independence and a strong desire to improve.",
+Future:"Your life-path reading suggests that consistency and adaptability may shape your next chapter.",
+HiddenTalent:"Your hidden-talent reading highlights abilities that may become stronger through curiosity, practice and experimentation."},
+days:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],colors:["Green","Blue","White","Silver","Deep Green","Golden","Purple"],focus:["Consistency","Communication","Learning","Discipline","Confidence","Patience","Creativity"]},
+hi:{greeting:"आपकी व्यक्तिगत रीडिंग",reportId:"रिपोर्ट आईडी",overall:{
+Love:"आपकी रिश्तों से जुड़ी ऊर्जा भावनात्मक समझ और बेहतर संवाद के दौर की ओर संकेत करती है।",
+"Career Option":"आपका करियर पैटर्न निरंतरता, सीखने और सोच-समझकर अवसर लेने पर जोर देता है।",
+Money:"आपकी वित्तीय थीम अनुशासन, धैर्य और सावधानी से निर्णय लेने की ओर संकेत करती है।",
+"Your Personality":"आपकी व्यक्तित्व रीडिंग जिज्ञासा, स्वतंत्र सोच और खुद को बेहतर बनाने की इच्छा को दर्शाती है।",
+Future:"आपकी जीवन-दिशा से जुड़े संकेत बताते हैं कि निरंतरता और परिस्थितियों के अनुसार ढलना महत्वपूर्ण हो सकता है।",
+General:"आपकी हिडन टैलेंट आत्म-जागरूकता, विकास और नई संभावनाओं के दौर की ओर संकेत करती है।"},
+days:["सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार","रविवार"],colors:["हरा","नीला","सफेद","सिल्वर","गहरा हरा","सुनहरा","बैंगनी"],focus:["निरंतरता","संवाद","सीखना","अनुशासन","आत्मविश्वास","धैर्य","रचनात्मकता"]}};
+async function openAffiliatePage(){
+  hideActivityToast(true); document.getElementById("affiliateOverlay").style.display="block"; document.body.style.overflow="hidden";
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(session?.user) await renderAffiliateDashboard(); else { affiliateMode="login"; renderAffiliateAuth(); }
+}
+function openAffiliatePortal(){
+  hideActivityToast(true); document.getElementById("affiliateOverlay").style.display="block"; document.body.style.overflow="hidden";
+  showAdminLogin();
+}
+function closeAffiliatePortal(){document.getElementById("affiliateOverlay").style.display="none";document.body.style.overflow="";}
+function affiliateEmail(username){return username.trim().toLowerCase()+"@affiliate.astrodev.local";}
+function renderAffiliateAuth(){
+ const a=document.getElementById("affiliateAuth"), d=document.getElementById("affiliateDashboard"); d.style.display="none";
+ a.innerHTML=`<div style="border:1px solid #e5e5e5;border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.05)"><h3 style="margin-bottom:8px">${affiliateMode==="login"?"Affiliate Login":"Create Affiliate Account"}</h3><p style="color:#777;font-size:13px;line-height:1.6;margin-bottom:18px">${affiliateMode==="login"?"Login with your username and password to view your sales and commission.":"Create your affiliate username and password. You will receive a unique referral link."}</p><input id="affUsername" placeholder="Username" autocomplete="username" style="width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px"><input id="affPassword" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;margin-bottom:12px"><button onclick="${affiliateMode==="login"?"affiliateLogin()":"affiliateSignup()"}" style="width:100%;padding:13px;border:0;border-radius:10px;background:#f2b900;font-weight:800">${affiliateMode==="login"?"Login":"Sign Up"}</button><button onclick="affiliateMode='${affiliateMode==="login"?"signup":"login"}';renderAffiliateAuth()" style="width:100%;margin-top:9px;padding:11px;border:0;background:transparent;color:#a97800">${affiliateMode==="login"?"Create new affiliate account":"Already have an account? Login"}</button><div id="affError" style="color:#b42318;font-size:12px;margin-top:10px"></div></div>`;
+}
+function showAdminLogin(){
+ const a=document.getElementById("affiliateAuth"); a.innerHTML=`<div style="border:1px solid #e5e5e5;border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.05)"><h3>Admin Panel</h3><p style="color:#777;font-size:13px;line-height:1.6;margin:8px 0 18px">Enter the admin password to view all affiliates and edit paid/pending commission amounts.</p><input id="adminPassword" type="password" placeholder="Admin password" autocomplete="off" style="width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;margin-bottom:12px"><button onclick="adminLogin()" style="width:100%;padding:13px;border:0;border-radius:10px;background:#171717;color:#fff;font-weight:800">Open Admin Panel</button><div id="adminError" style="color:#b42318;font-size:12px;margin-top:10px"></div></div>`;
+}
+async function adminLogin(){
+ const password=document.getElementById("adminPassword").value, e=document.getElementById("adminError"); if(!password){e.textContent="Enter password.";return} e.textContent="Loading admin panel…";
+ const r=await fetch(SUPABASE_URL+"/functions/v1/affiliate-admin",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"dashboard",password})}); const j=await r.json().catch(()=>({})); if(!r.ok){e.textContent=j.error||"Access denied.";return} adminPasswordSession=password; renderAdminDashboard(j.affiliates||[],password);
+}
+function renderAdminDashboard(affiliates,password){
+ const a=document.getElementById("affiliateAuth"),d=document.getElementById("affiliateDashboard"); a.style.display="none";d.style.display="block";
+ const totalSales=affiliates.reduce((n,a)=>n+a.total_sales,0), paid=affiliates.reduce((n,a)=>n+a.paid_amount,0), pending=affiliates.reduce((n,a)=>n+a.pending_amount,0);
+ d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div style="font-size:12px;color:#b07c00;font-weight:800;letter-spacing:1.5px">ADMIN</div><h2>Affiliate Management</h2></div><button onclick="closeAffiliatePortal()" style="border:1px solid #ddd;background:#fff;border-radius:9px;padding:8px 12px">Close</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px"><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Total Sales</small><h2>${totalSales}</h2></div><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Total Paid</small><h2>₹${paid.toFixed(2)}</h2></div><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Total Pending</small><h2>₹${pending.toFixed(2)}</h2></div></div>${affiliates.map(aff=>`<div style="border:1px solid #eee;border-radius:16px;padding:16px;margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><b>${escapeHtml(aff.username)}</b><div style="color:#777;font-size:11px">${escapeHtml(aff.referral_code)} • ${aff.total_sales} sales • Sales ₹${Number(aff.sales_amount).toFixed(2)}</div></div><div style="font-size:12px">Paid ₹${Number(aff.paid_amount).toFixed(2)} • Pending ₹${Number(aff.pending_amount).toFixed(2)}</div></div><div style="overflow:auto;margin-top:10px"><table style="width:100%;border-collapse:collapse;font-size:11px"><tr><th style="padding:7px;text-align:left">Sale</th><th>Sale ₹</th><th>Rate</th><th>Commission ₹</th><th>Status</th><th>Action</th></tr>${(aff.commissions||[]).map(c=>`<tr><td style="padding:7px;border-top:1px solid #eee">#${c.sale_number}</td><td style="border-top:1px solid #eee;text-align:center">${Number(c.sale_amount).toFixed(2)}</td><td style="border-top:1px solid #eee;text-align:center">${c.commission_rate}%</td><td style="border-top:1px solid #eee;text-align:center"><input id="amt_${c.id}" value="${Number(c.commission_amount).toFixed(2)}" style="width:85px;padding:6px;border:1px solid #ddd;border-radius:6px"></td><td style="border-top:1px solid #eee;text-align:center"><select id="st_${c.id}" style="padding:6px;border:1px solid #ddd;border-radius:6px"><option value="pending" ${c.status==='pending'?'selected':''}>pending</option><option value="paid" ${c.status==='paid'?'selected':''}>paid</option></select></td><td style="border-top:1px solid #eee;text-align:center"><button onclick="adminUpdateCommission('${c.id}',${JSON.stringify(password)})" style="padding:6px 9px;border:0;border-radius:6px;background:#f2b900;font-weight:700">Save</button></td></tr>`).join("")}</table></div></div>`).join("")}`;
+}
+async function adminUpdateCommission(id,password){
+ const amount=Number(document.getElementById("amt_"+id).value), status=document.getElementById("st_"+id).value; const pass=adminPasswordSession||password; const r=await fetch(SUPABASE_URL+"/functions/v1/affiliate-admin",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"update_commission",password:pass,commission_id:id,commission_amount:amount,status})}); const j=await r.json().catch(()=>({})); if(!r.ok){alert(j.error||"Update failed");return} const rr=await fetch(SUPABASE_URL+"/functions/v1/affiliate-admin",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"dashboard",password:pass})}); const jj=await rr.json().catch(()=>({})); if(rr.ok)renderAdminDashboard(jj.affiliates||[],pass);
+}
+async function affiliateSignup(){
+ const u=document.getElementById("affUsername").value.trim(), p=document.getElementById("affPassword").value; const e=document.getElementById("affError");
+ if(!/^[a-zA-Z0-9_]{3,24}$/.test(u)){e.textContent="Username must be 3–24 letters, numbers or underscore.";return} if(p.length<8){e.textContent="Password must be at least 8 characters.";return}
+ e.textContent="Creating account…";
+ const r=await fetch(AFFILIATE_SIGNUP_FUNCTION,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"signup",username:u,password:p})}); const j=await r.json().catch(()=>({}));
+ if(!r.ok){e.textContent=j.error||"Could not create account.";return} e.textContent="Account created. Signing you in…"; const {error:loginError}=await supabaseClient.auth.signInWithPassword({email:affiliateEmail(u),password:p}); if(loginError){affiliateMode="login"; renderAffiliateAuth(); document.getElementById("affError").textContent="Account created, but automatic login failed. Please login again."; return} await renderAffiliateDashboard();
+}
+async function affiliateLogin(){
+ const u=document.getElementById("affUsername").value.trim(), p=document.getElementById("affPassword").value, e=document.getElementById("affError"); e.textContent="Logging in…";
+ const {error}=await supabaseClient.auth.signInWithPassword({email:affiliateEmail(u),password:p}); if(error){e.textContent="Invalid username or password.";return} renderAffiliateDashboard();
+}
+async function renderAffiliateDashboard(){
+ const a=document.getElementById("affiliateAuth"), d=document.getElementById("affiliateDashboard"); a.style.display="none"; d.style.display="block"; d.innerHTML="Loading…";
+ const {data:{user}}=await supabaseClient.auth.getUser(); if(!user){a.style.display="block";d.style.display="none";renderAffiliateAuth();return}
+ const {data:aff,error}=await supabaseClient.from("affiliate_users").select("id,username,referral_code").eq("auth_user_id",user.id).single(); if(error){d.innerHTML="Affiliate profile not found.";return}
+ const {data:comm}=await supabaseClient.from("affiliate_commissions").select("sale_number,sale_amount,commission_rate,commission_amount,status,created_at").eq("affiliate_id",aff.id).order("sale_number",{ascending:false});
+ const rows=comm||[], sales=rows.length, saleAmount=rows.reduce((x,r)=>x+Number(r.sale_amount||0),0), paid=rows.filter(r=>r.status==="paid").reduce((x,r)=>x+Number(r.commission_amount||0),0), pending=rows.filter(r=>r.status!=="paid").reduce((x,r)=>x+Number(r.commission_amount||0),0), rate=sales>=101?60:sales>=51?50:40;
+ const link=location.origin+location.pathname+"?ref="+encodeURIComponent(aff.referral_code);
+ d.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px"><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Total Sales</small><h2>${sales}</h2></div><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Sales Amount</small><h2>₹${saleAmount.toFixed(2)}</h2></div><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Pending</small><h2>₹${pending.toFixed(2)}</h2></div><div style="padding:18px;border:1px solid #eee;border-radius:14px"><small>Paid</small><h2>₹${paid.toFixed(2)}</h2></div></div><div style="padding:18px;border:1px solid #eee;border-radius:14px;margin-bottom:18px"><b>Current Commission: ${rate}%</b><p style="color:#777;font-size:12px;margin:7px 0">40% for sales 1–50 • 50% for sales 51–100 • 60% for sales 101+</p><div style="display:flex;gap:8px"><input id="affLink" value="${link}" readonly style="flex:1;padding:11px;border:1px solid #ddd;border-radius:9px"><button onclick="navigator.clipboard.writeText(document.getElementById('affLink').value)" style="padding:11px 14px;border:0;border-radius:9px;background:#f2b900;font-weight:700">Copy Link</button></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3>Sales & Commission</h3><button onclick="supabaseClient.auth.signOut();affiliateMode='login';renderAffiliateAuth()" style="border:1px solid #ddd;background:#fff;border-radius:9px;padding:8px 12px">Logout</button></div><div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><tr><th style="text-align:left;padding:9px;border-bottom:1px solid #eee">Sale</th><th style="padding:9px;border-bottom:1px solid #eee">Sale Amount</th><th style="padding:9px;border-bottom:1px solid #eee">Rate</th><th style="padding:9px;border-bottom:1px solid #eee">Commission</th><th style="padding:9px;border-bottom:1px solid #eee">Status</th></tr>${rows.map(r=>`<tr><td style="padding:9px;border-bottom:1px solid #eee">#${r.sale_number}</td><td style="padding:9px;border-bottom:1px solid #eee;text-align:center">₹${Number(r.sale_amount).toFixed(2)}</td><td style="padding:9px;border-bottom:1px solid #eee;text-align:center">${r.commission_rate}%</td><td style="padding:9px;border-bottom:1px solid #eee;text-align:center">₹${Number(r.commission_amount).toFixed(2)}</td><td style="padding:9px;border-bottom:1px solid #eee;text-align:center">${r.status}</td></tr>`).join("")}</table></div>`;
+}
+function toggleLanguage(){currentLang=currentLang==="en"?"hi":"en";document.documentElement.lang=currentLang;document.body.classList.toggle("hindi-mode",currentLang==="hi");document.querySelectorAll("[data-en][data-hi]").forEach(el=>el.innerHTML=currentLang==="hi"?el.getAttribute("data-hi"):el.getAttribute("data-en"));document.getElementById("langBtn").textContent=currentLang==="hi"?"English":"हिंदी";if(document.getElementById("reportScreen").classList.contains("active"))renderReport()}
+function openWizard(){hideActivityToast(true);document.getElementById("wizardOverlay").classList.add("active");document.body.style.overflow="hidden";startChat()}
+function closeWizard(){document.getElementById("wizardOverlay").classList.remove("active");document.body.style.overflow="";activityRunning=true;scheduleActivityToast()}
+
+function updateChatViewport(){
+  const vv=window.visualViewport;
+  const h=vv?vv.height:window.innerHeight;
+  document.documentElement.style.setProperty("--chat-vh",h+"px");
+}
+function handleChatViewport(){
+  const vv=window.visualViewport;
+  const keyboardOpen=vv?((window.innerHeight-vv.height)>120):false;
+  document.body.classList.toggle("chat-keyboard-open",keyboardOpen);
+  updateChatViewport();
+  if(keyboardOpen) setTimeout(scrollChat,40);
+}
+function scrollChat(){const box=document.getElementById("chatMessages");if(!box)return;requestAnimationFrame(()=>{box.scrollTop=box.scrollHeight;});}
+function addChatMessage(textMsg,type="bot"){const box=document.getElementById("chatMessages");const row=document.createElement("div");row.className="chat-row "+type;const wrap=document.createElement("div");const label=document.createElement("div");label.className="chat-label";label.textContent=type==="bot"?"Astro Dev":(currentLang==="hi"?"आप":"You");const bubble=document.createElement("div");bubble.className="chat-bubble";bubble.innerHTML=textMsg;if(type==="bot"){const botWrap=document.createElement("div");botWrap.className="chat-bubble-wrap";const avatar=document.createElement("img");avatar.className="chat-bot-avatar";avatar.src="https://imgh.in/host/hyt1yd";avatar.alt="Astro Dev";botWrap.appendChild(avatar);const bubbleCol=document.createElement("div");bubbleCol.appendChild(label);bubbleCol.appendChild(bubble);botWrap.appendChild(bubbleCol);wrap.appendChild(botWrap);}else{wrap.appendChild(label);wrap.appendChild(bubble);}row.appendChild(wrap);box.appendChild(row);scrollChat()}
+function showTyping(ms=650){return new Promise(resolve=>{const t=document.getElementById("chatTyping");t.classList.add("active");scrollChat();setTimeout(()=>{t.classList.remove("active");resolve()},ms)})}
+function setChatInput(html){document.getElementById("chatInputArea").innerHTML=html;const inp=document.querySelector("#chatInputArea input");if(inp){inp.focus();inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();submitChatInput()}})}}
+if(window.visualViewport){window.visualViewport.addEventListener("resize",handleChatViewport);window.visualViewport.addEventListener("scroll",handleChatViewport)}window.addEventListener("resize",handleChatViewport);document.addEventListener("focusin",e=>{if(e.target.matches(".chat-text-input")){setTimeout(handleChatViewport,120);setTimeout(scrollChat,180)}});updateChatViewport();
+function startChat(){document.getElementById("chatMessages").innerHTML="";document.getElementById("chatInputArea").innerHTML="";currentStep=0;if(directPaymentOpen){directPaymentOpen=false;setTimeout(showPaymentStep,120);return}setTimeout(async()=>{addChatMessage(currentLang==="hi"?"नमस्ते 👋 मैं Astro Dev हूँ। आपकी एक छोटी-सी personal reading तैयार करते हैं।":"Hi 👋 I’m Astro Dev. Let’s create a quick personal reading for you.");await showTyping();addChatMessage(currentLang==="hi"?"आपका नाम क्या है?":"What is your name?");setChatInput('<div class="chat-input-row"><input id="chatAnswer" class="chat-text-input" type="text" autocomplete="name" placeholder="'+(currentLang==="hi"?"अपना नाम लिखें…":"Type your name…")+'"><button type="button" class="chat-send" onclick="submitChatInput()">➤</button></div>');},250)}
+function submitChatInput(){const input=document.getElementById("chatAnswer");if(!input)return;const value=input.value.trim();if(!value)return;handleChatAnswer(value)}
+async function handleChatAnswer(value){const step=currentStep;addChatMessage(value,"user");document.getElementById("chatInputArea").innerHTML="";if(step===0){userData.name=value;currentStep=1;await askNext(currentLang==="hi"?`आपसे मिलकर खुशी हुई, ${escapeHtml(value)} ✨`:`Nice to meet you, ${escapeHtml(value)} ✨`,currentLang==="hi"?"आप किस gender को चुनना चाहेंगे?":"How would you like to identify yourself?",genderChoices());return}if(step===2){userData.dob=value;currentStep=5;await askNext(currentLang==="hi"?"ठीक है ✨ जन्म तारीख मिल गई।":"Got it ✨ I have your birth date.",currentLang==="hi"?"आप किस बारे में reading चाहते हैं?":"What would you like your reading to focus on?",topicChoices());return}}
+async function askNext(message,question,inputHtml){await showTyping();addChatMessage(message);await showTyping();addChatMessage(question);setChatInput(inputHtml)}
+function genderChoices(){
+  return '<div class="chat-choice-row">'+
+    '<button type="button" class="chat-choice" data-gender="Male" onclick="selectGender(this)">'+(currentLang==="hi"?"पुरुष":"Male")+'</button>'+
+    '<button type="button" class="chat-choice" data-gender="Female" onclick="selectGender(this)">'+(currentLang==="hi"?"महिला":"Female")+'</button>'+
+    '<button type="button" class="chat-choice" data-gender="Other" onclick="selectGender(this)">'+(currentLang==="hi"?"अन्य":"Other")+'</button>'+
+    '<button type="button" class="chat-choice" data-gender="Prefer not to say" onclick="selectGender(this)">'+(currentLang==="hi"?"बताना पसंद नहीं":"Prefer not to say")+'</button>'+
+  '</div><div class="gender-send-wrap">'+
+    '<button type="button" id="genderSendBtn" class="chat-send gender-send-btn" onclick="sendGender()" disabled>➤ '+(currentLang==="hi"?"भेजें":"Send")+'</button>'+
+  '</div>'
+}
+let selectedGender="";
+function selectGender(button){
+  selectedGender=button.getAttribute("data-gender");
+  document.querySelectorAll(".chat-choice[data-gender]").forEach(b=>b.classList.remove("selected"));
+  button.classList.add("selected");
+  const send=document.getElementById("genderSendBtn");
+  if(send) send.disabled=false;
+}
+function sendGender(){
+  if(!selectedGender)return;
+  const value=selectedGender;
+  selectedGender="";
+  chooseChat(value,value);
+}
+async function chooseChat(value,label){
+  addChatMessage(currentLang==="hi"?translateChoice(label):label,"user");
+  document.getElementById("chatInputArea").innerHTML="";
+  if(currentStep===1){
+    userData.gender=value;
+    currentStep=2;
+    await askNext(
+      currentLang==="hi"?"धन्यवाद।":"Thank you.",
+      currentLang==="hi"?"आपकी जन्म तारीख क्या है?":"What is your date of birth?",
+      '<div class="chat-input-row"><input id="chatAnswer" class="chat-text-input" type="text" inputmode="numeric" autocomplete="bday" placeholder="'+(currentLang==="hi"?"जैसे 15/08/2002":"e.g. 15/08/2002")+'"><button type="button" class="chat-send" onclick="submitChatInput()">➤</button></div>'
+    );
+    return;
+  }
+  if(currentStep===5){
+    userData.topic=value;
+    await showTyping(700);
+    addChatMessage(currentLang==="hi"?"बस हो गया ✨ आपकी details मिल गई हैं। आपकी personalized reading का preview तैयार है।":"That’s everything ✨ I have your details. Your personalized reading preview is ready.");
+    setTimeout(showPreviewReport,450);
+  }
+}
+function topicChoices(){return `<div class="chat-choice-row"><button class="chat-choice" onclick="chooseChat('Love & Relationship','Love & Relationship')">♡ ${currentLang==="hi"?"प्रेम जीवन":"Love Life"}</button><button class="chat-choice" onclick="chooseChat('Career Option','Career Option')">↗ ${currentLang==="hi"?"करियर":"Career Option"}</button><button class="chat-choice" onclick="chooseChat('Money & Finance','Money & Finance')">₹ ${currentLang==="hi"?"पैसा और धन":"Money & Wealth"}</button><button class="chat-choice" onclick="chooseChat('Your Personality','Your Personality')">✦ ${currentLang==="hi"?"व्यक्तित्व":"Your Personality"}</button><button class="chat-choice" onclick="chooseChat('Future & Life Path','Future & Life Path')">◌ ${currentLang==="hi"?"भविष्य का साथी":"Future Partner"}</button><button class="chat-choice" onclick="chooseChat('Hidden Talent','Hidden Talent')">✧ ${currentLang==="hi"?"हिडन टैलेंट":"Hidden Talent"}</button></div>`}
+function translateChoice(v){const m={Male:"पुरुष",Female:"महिला",Other:"अन्य","Prefer not to say":"बताना पसंद नहीं","Love & Relationship":"प्रेम जीवन","Career Option":"करियर","Money & Finance":"पैसा और धन","Your Personality":"व्यक्तित्व","Future & Life Path":"भविष्य का साथी","Hidden Talent":"हिडन टैलेंट"};return currentLang==="hi"?(m[v]||v):v}
+function escapeHtml(v){return v.replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]))}
+function showPreviewReport(){
+  hideActivityToast(true);
+  closeWizard();
+  const screen=document.getElementById("previewScreen");
+  const grid=document.getElementById("previewGrid");
+  const hi=currentLang==="hi";
+  const cards=hi?[
+    ["❤️","LOVE SCORE"],["💰","WEALTH SCORE"],["💼","CAREER OPTION MATCH"],["🧠","YOUR PERSONALITY"],["💍","FUTURE PARTNER"],["✨","HIDDEN TALENT"]
+  ]:[
+    ["❤️","LOVE SCORE"],["💰","WEALTH SCORE"],["💼","CAREER OPTION MATCH"],["🧠","YOUR PERSONALITY"],["💍","FUTURE PARTNER"],["✨","HIDDEN TALENT"]
+  ];
+  grid.innerHTML=cards.map((c,i)=>`<button type="button" class="locked-preview-card ${i===5?"featured":""}" onclick="scrollToPreviewPlans()"><span class="preview-lock">🔒</span><div class="preview-emoji">${c[0]}</div><div class="preview-card-title">${c[1]}</div><div class="preview-blur ${i===5?"wide":""}"></div><div class="preview-hint">${hi?"Unlock to reveal":"Unlock to reveal"}</div></button>`).join("");
+  document.getElementById("previewTitle").textContent=hi?"आपकी रीडिंग तैयार है":`${userData.name || "Your"}, Your Reading Is Ready`;
+  document.getElementById("previewSubtitle").textContent=hi?"आपके जवाबों से personalized preview तैयार हुआ है। किसी भी locked card पर tap करके पूरी reading unlock करें।":"Your answers have created a personalized preview. Tap any locked card to see the available plans.";
+  screen.classList.add("active");
+  document.body.style.overflow="hidden";
+  screen.scrollTop=0;
+  activityRunning=true;
+  clearTimeout(activityTimer);
+  setTimeout(showActivityToast,900);
+}
+function scrollToPreviewPlans(){
+  const el=document.getElementById("previewPlans");
+  if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function openPlanCheckout(plan){
+  selectedPlan=plan;
+  hideActivityToast(true);
+  document.getElementById("previewScreen").classList.remove("active");
+  document.body.style.overflow="hidden";
+  document.getElementById("wizardOverlay").classList.add("active");
+  // Do NOT reopen the plan-selection cards. Go directly to Razorpay checkout.
+  handlePayment(plan);
+}
+
+function showPaymentStep(){
+  const messages=document.getElementById("chatMessages");
+  const area=document.getElementById("chatInputArea");
+  area.innerHTML="";
+  messages.insertAdjacentHTML("beforeend",`<div class="chat-row bot"><div style="width:100%"><div class="chat-label">Astro Dev</div><div class="chat-bubble" style="max-width:100%;width:100%;padding:0;background:transparent;border:0">
+    <div class="payment-card">
+    <div class="payment-choice-note">${currentLang==="hi"?"अपनी reading का level चुनें — Basic में quick score card और Premium में deeper analysis मिलेगा।":"Choose your reading level — Basic gives the score card, while Premium adds deeper analysis."}</div>
+    <div class="plan-stack">
+      <div class="plan-card basic">
+        <div class="plan-badge">✦ ${currentLang==="hi"?"BASIC REPORT":"BASIC REPORT"}</div>
+        <div class="plan-price">₹49</div>
+        <div class="plan-title">${currentLang==="hi"?"Personal Score Card":"Personal Score Card"}</div>
+        <div class="plan-sub">${currentLang==="hi"?"आपकी basic personalized reading और lucky details":"Your basic personalized reading with scores and lucky details"}</div>
+        <ul class="plan-features">
+          <li>✓ ${currentLang==="hi"?"Love / Arrange Marriage":"Love / Arrange Marriage"}</li>
+          <li>✓ ${currentLang==="hi"?"Career & Money Flow":"Career & Money Flow"}</li>
+          <li>✓ ${currentLang==="hi"?"Aura & Personality Trait":"Aura & Personality Trait"}</li>
+          <li>★ ${currentLang==="hi"?"Hidden Talent":"Hidden Talent"}</li>
+          <li>+ ${currentLang==="hi"?"Lucky Colour & Day":"Lucky Colour & Day"}</li>
+          <li>❤ ${currentLang==="hi"?"Love Compatibility":"Love Compatibility"}</li>
+        </ul>
+        <button type="button" class="plan-btn" onclick="selectPlanAndPay('basic')">${currentLang==="hi"?"₹49 Pay करें":"Pay ₹49"} →</button>
+        <div class="plan-note">🔒 ${currentLang==="hi"?"One-time payment. कोई subscription नहीं":"One-time payment. No subscription"}</div>
+      </div>
+      <div class="plan-card premium">
+        <div class="plan-badge">👑 ${currentLang==="hi"?"PREMIUM • DEEP READING":"PREMIUM • DEEP READING"}</div>
+        <div class="plan-price">₹99 <span class="plan-old">₹399</span></div>
+        <div class="plan-title">${currentLang==="hi"?"Deep Personalized Analysis":"Deep Personalized Analysis"}</div>
+        <div class="plan-sub">${currentLang==="hi"?"Basic में सब कुछ + आपकी reading ki premium patterns में से एक detailed version":"Everything in Basic +  deep premium reading patterns"}</div>
+        <ul class="plan-features">
+          <li>✓ ${currentLang==="hi"?"Everything in Basic":"Everything in Basic"}</li>
+          <li>❤ ${currentLang==="hi"?"Relationship & Compat.":"Relationship & Compat."}</li>
+          <li>💰 ${currentLang==="hi"?"Money Secret & Blockages":"Money Secret & Blockages"}</li>
+          <li>🧠 ${currentLang==="hi"?"Deep Weakness + Strength":"Deep Weakness + Strength"}</li>
+          <li>🔢 ${currentLang==="hi"?"Deep Numerology Breakdown":"Deep Numerology Breakdown"}</li>
+          <li>📄 ${currentLang==="hi"?"Downloadable PDF Report":"Downloadable PDF Report"}</li>
+          <li>🔮 ${currentLang==="hi"?"5-Year Future Timeline":"5-Year Future Timeline"}</li>
+        </ul>
+        <button type="button" class="plan-btn" onclick="selectPlanAndPay('premium')">👑 ${currentLang==="hi"?"Unlock Premium — ₹99":"Unlock Premium — ₹99"}</button>
+      </div>
+    </div>
+  </div></div></div>`);
+  scrollChat();
+}
+function selectPlanAndPay(plan){
+  selectedPlan=plan;
+  handlePayment(plan);
+}
+
+async function handlePayment(plan=selectedPlan){
+  selectedPlan=plan;
+  if(!pendingReportId) pendingReportId=randomId();
+
+  if(typeof Razorpay==="undefined"){
+    showPaymentError(currentLang==="hi"
+      ?"Razorpay Checkout load नहीं हुआ। Internet connection check करके फिर कोशिश करें।"
+      :"Razorpay Checkout could not load. Check your internet connection and try again.");
+    return;
+  }
+
+  const amount=selectedPlan==="premium"?99:49;
+  const area=document.getElementById("chatInputArea");
+
+  area.innerHTML=`<div class="payment-card payment-wait-card">
+    <div class="payment-price">₹${amount}</div>
+    <div class="payment-title">${currentLang==="hi"?"Secure payment तैयार हो रहा है…":"Preparing secure payment…"}</div>
+    <div class="payment-sub">${currentLang==="hi"?"Razorpay checkout अभी खुल रहा है।":"Razorpay Checkout is opening."}</div>
+    <div class="payment-wait-dots"><span></span><span></span><span></span></div>
+  </div>`;
+  scrollChat();
+
+  try{
+    const orderResponse=await fetch(RAZORPAY_PAYMENT_FUNCTION,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"create_order",
+        plan:selectedPlan,
+        reportId:pendingReportId,
+        userData:{...userData},
+        name:userData.name||"Astro Dev Customer"
+      })
+    });
+
+    const orderData=await orderResponse.json().catch(()=>({}));
+
+    const razorpayOrderId=orderData.order_id||orderData.orderId;
+  if(!orderResponse.ok || !razorpayOrderId){
+      throw new Error(orderData.error||("Payment server returned HTTP "+orderResponse.status));
+    }
+
+    const options={
+      key:orderData.keyId||RAZORPAY_KEY_ID,
+      amount:orderData.amount,
+      currency:orderData.currency||"INR",
+      name:"Astro Dev",
+      description:selectedPlan==="premium"?"Premium Astrology Report":"Basic Astrology Report",
+      order_id:razorpayOrderId,
+      prefill:{
+        name:userData.name||"",
+        contact:""
+      },
+      notes:{
+        plan:selectedPlan
+      },
+      theme:{
+        color:"#f2b900"
+      },
+      modal:{
+        ondismiss:function(){
+          showPaymentRetry();
+        }
+      },
+      handler:async function(response){
+        await verifyRazorpayPayment(response,razorpayOrderId);
+      }
+    };
+
+    const rzp=new Razorpay(options);
+
+    rzp.on("payment.failed",function(response){
+      const message=response?.error?.description||"Payment failed.";
+      showPaymentError(currentLang==="hi"
+        ?"Payment पूरा नहीं हुआ। कृपया फिर से कोशिश करें।"
+        :"Payment could not be completed. Please try again.");
+      console.error("Razorpay payment failed:",message);
+    });
+
+    rzp.open();
+
+  }catch(error){
+    console.error("Razorpay order error:",error);
+    showPaymentError(
+      "Payment error: "+String(error?.message||error||"Unknown error")
+    );
+  }
+}
+
+async function verifyRazorpayPayment(response,orderId){
+  const amount=selectedPlan==="premium"?99:49;
+  const area=document.getElementById("chatInputArea");
+
+  area.innerHTML=`<div class="payment-card payment-wait-card">
+    <div class="payment-success-icon">✓</div>
+    <div class="payment-price">₹${amount}</div>
+    <div class="payment-title">${currentLang==="hi"?"Payment verify हो रहा है…":"Verifying payment…"}</div>
+    <div class="payment-sub">${currentLang==="hi"?"कृपया इस screen को बंद न करें।":"Please keep this screen open."}</div>
+    <div class="payment-wait-dots"><span></span><span></span><span></span></div>
+  </div>`;
+  scrollChat();
+
+  try{
+    const verifyResponse=await fetch(RAZORPAY_PAYMENT_FUNCTION,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"verify_payment",
+        plan:selectedPlan,
+        razorpay_order_id:orderId,
+        razorpay_payment_id:response.razorpay_payment_id,
+        razorpay_signature:response.razorpay_signature,
+      reportId:pendingReportId
+      })
+    });
+
+    const result=await verifyResponse.json().catch(()=>({}));
+
+    if(!verifyResponse.ok || !result.paid){
+      throw new Error(result.error||"Payment verification failed.");
+    }
+
+    // Only a server-verified payment reaches the report.
+    closeWizard();
+    startReport();
+
+  }catch(error){
+    console.error("Razorpay verification error:",error);
+    showPaymentError(
+      "Payment verification error: "+String(error?.message||error||"Unknown error")
+    );
+  }
+}
+
+function showPaymentError(message){
+  const area=document.getElementById("chatInputArea");
+  const safeMessage=String(message).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  area.innerHTML=`<div class="payment-card payment-confirm-card">
+    <div class="payment-success-icon">!</div>
+    <div class="payment-title">${safeMessage}</div>
+    <button type="button" class="payment-done-btn" onclick="handlePayment(selectedPlan)">
+      ${currentLang==="hi"?"फिर से कोशिश करें":"Try Payment Again"}
+    </button>
+    <div class="payment-note">${currentLang==="hi"
+      ?"Secure payment Razorpay के माध्यम से होगा।"
+      :"Payment is processed securely through Razorpay."}</div>
+  </div>`;
+  scrollChat();
+}
+
+function showPaymentRetry(){
+  const amount=selectedPlan==="premium"?99:49;
+  const area=document.getElementById("chatInputArea");
+  area.innerHTML=`<div class="payment-card payment-confirm-card">
+    <div class="payment-price">₹${amount}</div>
+    <div class="payment-title">${currentLang==="hi"?"Payment बंद हो गया":"Payment cancelled"}</div>
+    <div class="payment-sub">${currentLang==="hi"?"आपने payment पूरा नहीं किया।":"The payment window was closed before completion."}</div>
+    <button type="button" class="payment-done-btn" onclick="handlePayment(selectedPlan)">
+      ${currentLang==="hi"?"Payment फिर से करें":"Try Payment Again"}
+    </button>
+  </div>`;
+  scrollChat();
+}
+
+function confirmPaymentAndGenerate(){
+  // Kept for compatibility with any older markup.
+  // Reports must now be unlocked only after server verification.
+  handlePayment(selectedPlan);
+}
+
+function startReport(){
+  document.getElementById("previewScreen").classList.remove("active");
+  closeWizard();
+  hideActivityToast(true);
+  document.getElementById("loadingScreen").classList.add("active");
+  setTimeout(()=>{
+    document.getElementById("loadingScreen").classList.remove("active");
+    generateReport();
+    document.getElementById("reportScreen").classList.add("active");
+    document.body.style.overflow="hidden";
+    activityRunning=true;
+    clearTimeout(activityTimer);
+    setTimeout(showActivityToast,900);
+  },3000);
+}
+
+function randomNumber(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function randomId(){const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";let r="";for(let i=0;i<8;i++)r+=chars[Math.floor(Math.random()*chars.length)];return"AD-"+r}
+let generatedReport={};
+const messageVariants={
+ en:[
+  "You have a naturally positive aura — people may notice your calm presence more than you realize. Your challenge is that you can sometimes overthink a good opportunity and wait for the perfect moment.",
+  "There is a warm, encouraging quality in your energy. You may lift the mood of people around you without trying. The less comfortable side is absorbing other people’s expectations too easily.",
+  "Your reading shows strong curiosity and a desire to grow. You may do well when you keep learning and experimenting. Watch impatience when results take time.",
+  "You carry an independent energy and may prefer figuring things out yourself. That is a strength, but asking the right person for help may sometimes speed up your progress.",
+  "There is a thoughtful and observant side to you that can become a major advantage. At times, however, analysis can become a delay. Balance reflection with action.",
+  "Your energy suggests resilience. Setbacks may affect you for a while, but you can return with more clarity. Do not let one disappointing experience define the next one.",
+  "You have an expressive side, and confidence can make your presence memorable. Self-doubt may appear at the wrong moment, so preparation can help you trust yourself.",
+  "Your pattern points toward steady growth rather than instant transformation. Comparison can make progress feel slow, while consistency remains your useful advantage.",
+  "There is positive social energy around you. Connections and communication can open doors, but saying yes too quickly may drain you. Clear boundaries matter.",
+  "Your reading carries a hopeful tone. You can turn difficult periods into learning experiences, but old worries should not automatically become predictions about new situations."
+ ],
+ hi:[
+  "आपकी ऊर्जा में स्वाभाविक सकारात्मकता दिखती है — लोग आपकी शांत presence को आपकी सोच से ज्यादा notice कर सकते हैं। चुनौती यह है कि कभी-कभी आप अच्छे अवसर पर भी जरूरत से ज्यादा सोचते हैं।",
+  "आपकी energy में warm और encouraging quality है। बिना कोशिश के भी आप आसपास के लोगों का mood बेहतर कर सकते हैं। लेकिन कभी-कभी आप दूसरों की expectations को जरूरत से ज्यादा महत्व दे सकते हैं।",
+  "आपकी reading में curiosity और growth की strong इच्छा दिखाई देती है। सीखते और experiment करते रहना आपके लिए अच्छा हो सकता है। Results देर से मिलने पर impatience से बचें।",
+  "आपमें independent energy है और आप चीजें खुद समझना पसंद कर सकते हैं। यह strength है, लेकिन सही व्यक्ति से help लेना कभी-कभी progress को तेज कर सकता है।",
+  "आपका thoughtful और observant side आपकी बड़ी strength बन सकता है। लेकिन कभी-कभी analysis action को पीछे कर देता है। सोच और कदम दोनों का balance रखें।",
+  "आपकी energy resilience दिखाती है। Setbacks कुछ समय असर डाल सकते हैं, लेकिन आप clarity के साथ वापस आ सकते हैं। एक खराब experience को अगली शुरुआत का फैसला न बनने दें।",
+  "आपमें expressive side है और confidence के साथ आपकी presence याद रह सकती है। जरूरत के समय self-doubt आ सकता है, इसलिए preparation आपको अपने ऊपर भरोसा रखने में मदद कर सकती है।",
+  "आपकी reading instant transformation के बजाय steady growth की ओर इशारा करती है। Comparison progress को slow महसूस करा सकता है, जबकि consistency आपकी strength है।",
+  "आपके आसपास positive social energy दिखाई देती है। Connections और communication opportunities ला सकते हैं, लेकिन बहुत जल्दी yes कहना energy drain कर सकता है। Boundaries रखें।",
+  "आपकी reading में hopeful tone है। मुश्किल समय को learning experience में बदलने की क्षमता हो सकती है, लेकिन पुरानी worries को नई situations की prediction न बनने दें।"
+ ]
+};
+const premiumVariants={
+ en:[
+  {rel:"You may value loyalty and emotional consistency more than dramatic gestures. Compatibility can improve when expectations are spoken clearly instead of being assumed.",money:"Your stronger pattern is gradual accumulation. A possible blockage is emotional spending or changing direction too quickly when results are slow.",strength:"You can combine observation with persistence. Once you understand why something matters to you, you may stay with it longer than people expect.",weakness:"Overthinking can create a gap between knowing what to do and actually doing it. Watch perfectionism disguised as preparation.",numerology:"Your lucky number in this report is used as a symbolic theme. Its meaning is connected here with initiative, fresh starts and personal independence.",theme:"Build your own direction without rushing the timeline."},
+  {rel:"You may connect deeply when you feel respected and understood. A relationship can become difficult when you expect the other person to guess what you need.",money:"Your money pattern favors structure. The main thing to watch is irregular saving or making decisions from short-term emotion.",strength:"You have a people-reading quality that can help you understand situations quickly.",weakness:"Taking on too many expectations from others can quietly reduce your focus.",numerology:"Your symbolic number theme emphasizes communication, adaptability and learning through experience.",theme:"Protect your energy while staying open to meaningful connections."},
+  {rel:"You may be drawn to people who bring both comfort and mental stimulation. Compatibility grows when both sides keep enough personal space.",money:"Your pattern suggests that money improves when you separate wants, needs and long-term goals. Impulsive upgrades may become a recurring leak.",strength:"Curiosity can turn into a strong learning advantage when paired with consistency.",weakness:"Impatience with slow results can make a good path look like the wrong path.",numerology:"The symbolic number theme here points toward patience, inner discipline and long-term building.",theme:"Let small improvements compound before changing direction."},
+  {rel:"You may want sincerity more than constant attention. The relationship challenge is protecting honesty without becoming overly guarded.",money:"Your financial theme favors practical planning. Watch the tendency to postpone financial organization until a problem becomes urgent.",strength:"You can recover from setbacks and use them as information rather than only as failure.",weakness:"Past disappointments may sometimes influence new decisions more than the present situation deserves.",numerology:"Your number theme is interpreted symbolically around resilience, responsibility and completing unfinished cycles.",theme:"Use the past as information, not as a permanent rule."},
+  {rel:"You may appreciate a relationship where communication feels easy and friendship is strong underneath attraction. Compatibility can suffer when one side becomes overly accommodating.",money:"Your pattern benefits from clear limits. A possible blockage is saying yes to expenses because they feel socially necessary.",strength:"Your social awareness can help you notice what a room or conversation needs.",weakness:"Trying to keep everyone comfortable may sometimes make your own priorities unclear.",numerology:"Your symbolic number theme connects with expression, social confidence and creative problem-solving.",theme:"Be warm without abandoning your own boundaries."},
+  {rel:"You may need both emotional safety and freedom. A healthy connection for you may leave room for individual goals as well as shared plans.",money:"Your pattern favors money decisions made after a pause rather than in excitement. Watch fast changes based on temporary motivation.",strength:"Independence and self-learning can become powerful assets when you also accept useful feedback.",weakness:"Doing everything alone can create unnecessary pressure and slower progress.",numerology:"Your symbolic number theme emphasizes independence, initiative and learning by doing.",theme:"Stay independent, but do not isolate yourself from useful support."},
+  {rel:"You may respond strongly to consistency. Mixed signals can make you withdraw faster than you explain what is wrong.",money:"Your money pattern can strengthen through predictable habits. Watch small repeated purchases that feel harmless individually.",strength:"You may be better at noticing patterns than you initially give yourself credit for.",weakness:"Too much analysis can make simple decisions feel unusually complicated.",numerology:"Your symbolic number theme is linked here with pattern recognition, reflection and practical wisdom.",theme:"Turn insight into simple repeatable habits."},
+  {rel:"You may value emotional maturity and calm communication. Compatibility can improve when disagreements are treated as information rather than personal attacks.",money:"Your pattern favors deliberate choices. The possible blockage is fear of making the wrong move, which can lead to unnecessary delay.",strength:"You can think through consequences before acting, which can be useful when balanced with action.",weakness:"Fear of mistakes may sometimes become a reason to wait too long.",numerology:"Your symbolic number theme emphasizes balance, partnership and thoughtful decisions.",theme:"A careful decision can still be a timely decision."},
+  {rel:"You may be attracted to people with ambition and a clear identity. The relationship lesson is keeping comparison from becoming competition.",money:"Your financial pattern improves when goals are measurable. Watch comparison-driven spending or lifestyle pressure.",strength:"Ambition can push you to keep improving after others would stop.",weakness:"Comparing your timeline with someone else’s can reduce satisfaction with genuine progress.",numerology:"Your symbolic number theme is interpreted around ambition, material discipline and responsibility.",theme:"Measure your progress against your own previous version."},
+  {rel:"You may need a strong feeling of trust before becoming fully open. Once trust is established, consistency may matter more than grand gestures.",money:"Your pattern suggests value in building a financial buffer. The possible blockage is postponing preparation because the future feels too distant.",strength:"You can be patient when you believe the destination is meaningful.",weakness:"Waiting for certainty can sometimes delay the first practical step.",numerology:"Your symbolic number theme connects with patience, structure and long-term stability.",theme:"Prepare quietly now for options you may want later."}
+ ],
+ hi:[
+  {rel:"आप loyalty और emotional consistency को dramatic gestures से ज्यादा महत्व दे सकते हैं। Compatibility तब बेहतर हो सकती है जब expectations को clearly बताया जाए।",money:"आपका stronger pattern gradual accumulation का है। Possible blockage emotional spending या results slow होने पर direction जल्दी बदलना हो सकता है।",strength:"आप observation और persistence को साथ ला सकते हैं। जब कोई चीज आपके लिए meaningful हो जाए तो आप अपेक्षा से ज्यादा देर तक टिक सकते हैं।",weakness:"Overthinking करने से पता होता है क्या करना है, लेकिन action देर से हो सकता है। Perfectionism पर ध्यान दें।",numerology:"इस report में lucky number को symbolic theme की तरह इस्तेमाल किया गया है। इसका संकेत initiative, fresh starts और independence से जोड़ा गया है।",theme:"अपनी direction खुद बनाएं, लेकिन timeline को लेकर जल्दबाजी न करें।"},
+  {rel:"आप तब deeply connect कर सकते हैं जब आपको respect और understanding मिले। Challenge यह हो सकता है कि आप अपनी जरूरतें बिना कहे सामने वाला समझ ले, ऐसी उम्मीद करें।",money:"आपका money pattern structure से मजबूत हो सकता है। Irregular saving या short-term emotion से decisions लेना ध्यान देने वाली बात है।",strength:"आपमें people-reading quality हो सकती है, जिससे situations जल्दी समझने में मदद मिलती है।",weakness:"दूसरों की expectations लेने से आपका focus quietly कम हो सकता है।",numerology:"आपका symbolic number theme communication, adaptability और experience से learning पर आधारित है।",theme:"अपनी energy बचाते हुए meaningful connections के लिए खुले रहें।"},
+  {rel:"आप उन लोगों की ओर आकर्षित हो सकते हैं जो comfort के साथ mental stimulation भी दें। Compatibility तब बढ़ सकती है जब दोनों को personal space मिले।",money:"Money तब बेहतर manage हो सकता है जब wants, needs और long-term goals अलग रखें। Impulsive upgrades leak बन सकते हैं।",strength:"Curiosity consistency के साथ जुड़कर strong learning advantage बन सकती है।",weakness:"Slow results के कारण impatience आपको सही path पर भी doubt करा सकती है।",numerology:"यह symbolic number theme patience, inner discipline और long-term building से जुड़ी है।",theme:"Direction बदलने से पहले छोटे improvements को compound होने दें।"},
+  {rel:"आप attention से ज्यादा sincerity पसंद कर सकते हैं। Relationship challenge honesty रखते हुए जरूरत से ज्यादा guarded न होना है।",money:"आपकी financial theme practical planning को support करती है। Financial organization को problem आने तक टालना blockage बन सकता है।",strength:"आप setbacks से recover होकर उनसे information ले सकते हैं।",weakness:"Past disappointments कभी-कभी present situation से ज्यादा influence कर सकते हैं।",numerology:"आपका symbolic number theme resilience, responsibility और unfinished cycles complete करने से जुड़ा है।",theme:"Past को information की तरह इस्तेमाल करें, permanent rule की तरह नहीं।"},
+  {rel:"आप ऐसे relationship को value कर सकते हैं जिसमें communication easy हो और friendship strong हो। बहुत ज्यादा accommodate करना compatibility को प्रभावित कर सकता है।",money:"Clear limits आपकी money pattern को मजबूत कर सकती हैं। Social pressure में expenses को yes कहना ध्यान देने योग्य है।",strength:"आपकी social awareness बता सकती है कि room या conversation को क्या चाहिए।",weakness:"सबको comfortable रखने की कोशिश में आपकी own priorities unclear हो सकती हैं।",numerology:"यह symbolic number theme expression, social confidence और creative problem-solving से जुड़ी है।",theme:"Warm रहें, लेकिन अपनी boundaries छोड़े बिना।"},
+  {rel:"आपको emotional safety और freedom दोनों की जरूरत हो सकती है। Healthy connection में individual goals के लिए भी जगह हो सकती है।",money:"Excitement के बजाय pause के बाद money decisions लेना आपके लिए useful हो सकता है। Temporary motivation पर fast changes से बचें।",strength:"Independence और self-learning useful assets बन सकते हैं, खासकर feedback स्वीकार करने के साथ।",weakness:"सब कुछ अकेले करना unnecessary pressure और slow progress ला सकता है।",numerology:"यह symbolic number theme independence, initiative और learning by doing से जुड़ी है।",theme:"Independent रहें, लेकिन useful support से खुद को isolate न करें।"},
+  {rel:"आप consistency पर strongly respond कर सकते हैं। Mixed signals मिलने पर आप बिना समझाए जल्दी withdraw कर सकते हैं।",money:"Predictable habits आपकी money pattern को मजबूत कर सकती हैं। छोटी repeated purchases पर ध्यान दें।",strength:"आप patterns notice करने में अपनी सोच से बेहतर हो सकते हैं।",weakness:"Too much analysis simple decisions को unnecessarily complicated बना सकता है।",numerology:"यह symbolic number theme pattern recognition, reflection और practical wisdom से जुड़ी है।",theme:"Insight को simple repeatable habits में बदलें।"},
+  {rel:"आप emotional maturity और calm communication को value कर सकते हैं। Disagreements को personal attack की जगह information की तरह देखना useful हो सकता है।",money:"Deliberate choices आपकी financial pattern को support करती हैं। Wrong move के डर से delay होना blockage बन सकता है।",strength:"आप action से पहले consequences सोच सकते हैं, जो balance के साथ useful quality है।",weakness:"Mistakes का डर कभी-कभी जरूरत से ज्यादा waiting करा सकता है।",numerology:"यह symbolic number theme balance, partnership और thoughtful decisions से जुड़ी है।",theme:"Careful decision भी timely decision हो सकता है।"},
+  {rel:"आप ambition और clear identity वाले लोगों की ओर आकर्षित हो सकते हैं। Relationship lesson यह है कि comparison को competition न बनने दें।",money:"Measurable goals money pattern को improve कर सकते हैं। Comparison-driven spending या lifestyle pressure पर ध्यान दें।",strength:"Ambition आपको दूसरों के रुकने के बाद भी improve करने के लिए push कर सकती है।",weakness:"किसी और की timeline से comparison genuine progress को छोटा महसूस करा सकता है।",numerology:"यह symbolic number theme ambition, material discipline और responsibility से जुड़ी है।",theme:"अपनी progress को अपने पुराने version से measure करें।"},
+  {rel:"आपको fully open होने से पहले strong trust की जरूरत हो सकती है। Trust बनने के बाद consistency आपके लिए grand gestures से ज्यादा important हो सकती है।",money:"Financial buffer बनाना आपके pattern के लिए useful हो सकता है। Future दूर लगने पर preparation टालना blockage बन सकता है।",strength:"जब destination meaningful हो तो आप patience दिखा सकते हैं।",weakness:"Certainty का इंतजार कभी-कभी first practical step को delay कर सकता है।",numerology:"यह symbolic number theme patience, structure और long-term stability से जुड़ी है।",theme:"आज quietly prepare करें उन options के लिए जिन्हें future में चाह सकते हैं।"}
+ ]
+};
+function buildPremiumPersonalizedVariants(){
+  const fields=["rel","money","strength","weakness","numerology","theme"];
+  const result={en:{},hi:{}};
+  fields.forEach(field=>{
+    result.en[field]=premiumVariants.en.map(v=>v[field]);
+    result.hi[field]=premiumVariants.hi.map(v=>v[field]);
+  });
+  return result;
+}
+const premiumPersonalizedVariants=buildPremiumPersonalizedVariants();
+
+function generateReport(){
+  const variantIndex=randomNumber(0,messageVariants.en.length-1);
+  const premiumVariantIndex=randomNumber(0,premiumVariants.en.length-1);
+  const premiumFieldIndexes={
+    rel:randomNumber(0,9),
+    money:randomNumber(0,9),
+    strength:randomNumber(0,9),
+    weakness:randomNumber(0,9),
+    numerology:randomNumber(0,9),
+    theme:randomNumber(0,9)
+  };
+  generatedReport={
+    overall:randomNumber(72,94),love:randomNumber(70,95),career:randomNumber(68,94),money:randomNumber(65,93),personality:randomNumber(72,97),aura:randomNumber(76,98),social:randomNumber(70,95),intuition:randomNumber(68,96),growth:randomNumber(72,97),
+    luckyNumber:randomNumber(1,9),dayIndex:randomNumber(0,6),colorIndex:randomNumber(0,6),focusIndex:randomNumber(0,6),variantIndex,premiumVariantIndex,premiumFieldIndexes,id:pendingReportId||randomId()
+  };
+  renderReport();
+}
+function renderReport(){
+  const r=generatedReport,lang=translations[currentLang];
+  document.body.classList.toggle("premium-active",selectedPlan==="premium");
+  document.getElementById("reportGreeting").textContent=(currentLang==="hi"?"आपकी व्यक्तिगत रीडिंग, ":"Your Personalized Reading, ")+userData.name;
+  document.getElementById("reportId").textContent=(currentLang==="hi"?"रिपोर्ट आईडी: ":"Report ID: ")+r.id+(selectedPlan==="premium"?(currentLang==="hi"?" • प्रीमियम":" • PREMIUM"):"");
+  document.getElementById("overallScore").textContent=r.overall;
+  document.getElementById("overallText").textContent=lang.overall[getTopicKey(userData.topic)]||lang.overall.General;
+  const basicLoveText=currentLang==="hi"?"आपकी love-life reading emotional clarity, connection और honest communication पर focus करती है।":"Your love-life reading focuses on emotional clarity, connection and honest communication.";
+  const basicCareerMoneyText=currentLang==="hi"?"आपकी career और money-flow reading consistency, skill-building और disciplined decisions पर focus करती है।":"Your career and money-flow reading focuses on consistency, skill-building and disciplined decisions.";
+  const basicPersonalityText=currentLang==="hi"?"आपकी aura और personality trait reading आपकी natural energy, confidence और self-awareness को highlight करती है।":"Your aura and personality trait reading highlights your natural energy, confidence and self-awareness.";
+  const basicTalentText=currentLang==="hi"?"आपका hidden talent experiment, practice और आपकी natural रुचियों के साथ मजबूत हो सकता है।":"Your hidden talent can become stronger through experimentation, practice and your natural interests.";
+  const basicLuckyText=currentLang==="hi"?`आपका lucky number ${r.luckyNumber}, lucky day ${lang.days[r.dayIndex]} और lucky colour ${lang.colors[r.colorIndex]} है।`:`Your lucky number is ${r.luckyNumber}, lucky day is ${lang.days[r.dayIndex]}, and lucky colour is ${lang.colors[r.colorIndex]}.`;
+  const basicCompatibilityText=currentLang==="hi"?"आपकी love compatibility reading communication, emotional fit और mutual understanding पर focus करती है।":"Your love compatibility reading focuses on communication, emotional fit and mutual understanding.";
+  document.getElementById("basicLoveText").textContent=basicLoveText;
+  document.getElementById("basicCareerMoneyText").textContent=basicCareerMoneyText;
+  document.getElementById("basicPersonalityText").textContent=basicPersonalityText;
+  document.getElementById("basicTalentText").textContent=basicTalentText;
+  document.getElementById("basicLuckyText").textContent=basicLuckyText;
+  document.getElementById("basicCompatibilityText").textContent=basicCompatibilityText;
+  const fields=["love","career","money","personality","aura","social","intuition","growth"];
+  fields.forEach(k=>{const el=document.getElementById(k+"Score"),bar=document.getElementById(k+"Bar");if(el)el.textContent=r[k]+"%";if(bar)bar.style.width=r[k]+"%"});
+  document.getElementById("scoreRing").style.background=`conic-gradient(var(--green) ${r.overall*3.6}deg,#222923 ${r.overall*3.6}deg)`;
+  const indexes=r.premiumFieldIndexes||{rel:r.premiumVariantIndex,money:r.premiumVariantIndex,strength:r.premiumVariantIndex,weakness:r.premiumVariantIndex,numerology:r.premiumVariantIndex,theme:r.premiumVariantIndex};
+  const pv=premiumPersonalizedVariants[currentLang];
+  document.getElementById("premiumRelationship").textContent=pv.rel[indexes.rel];
+  document.getElementById("premiumMoney").textContent=pv.money[indexes.money];
+  document.getElementById("premiumStrength").textContent=pv.strength[indexes.strength];
+  document.getElementById("premiumWeakness").textContent=pv.weakness[indexes.weakness];
+  document.getElementById("premiumNumerology").textContent=pv.numerology[indexes.numerology];
+  document.getElementById("premiumTheme").textContent=pv.theme[indexes.theme];
+  const years=currentLang==="hi"?["अगला चरण","Year 2","Year 3","Year 4","Year 5"]:["Next phase","Year 2","Year 3","Year 4","Year 5"];
+  const timelineEn=["A reset-and-focus phase: simplify priorities and notice what repeatedly attracts your attention.","A learning phase: a useful skill, connection or habit may become more important than expected.","A decision phase: consistency may matter more than speed as you choose which direction deserves more energy.","A consolidation phase: previous effort may become easier to recognize through stronger routines and clearer boundaries.","A perspective phase: you may understand your earlier choices differently and have more clarity about what to build next."];
+  const timelineHi=["Reset और focus का phase: priorities simplify करें और देखें कि कौन-सी चीजें बार-बार आपका ध्यान खींचती हैं।","Learning का phase: कोई skill, connection या habit अपेक्षा से ज्यादा important हो सकती है।","Decision का phase: speed से ज्यादा consistency matter कर सकती है जब आप direction चुनें।","Consolidation का phase: पहले की मेहनत stronger routines और clearer boundaries के रूप में दिख सकती है।","Perspective का phase: पुराने choices को नई समझ से देख सकते हैं और आगे क्या build करना है इसकी clarity बढ़ सकती है।"];
+  document.getElementById("premiumTimeline").innerHTML=years.map((y,i)=>`<div class="timeline-row"><div class="timeline-year">${y}</div><p>${currentLang==="hi"?timelineHi[i]:timelineEn[i]}</p></div>`).join("");
+}
+function getTopicKey(topic){if(topic==="Love & Relationship")return"Love";if(topic==="Career Option")return"Career Option";if(topic==="Money & Finance")return"Money";if(topic==="Your Personality")return"Your Personality";if(topic==="Future & Life Path")return"Future";return"HiddenTalent"}
+function generateEnglishInsight(){return({Love:"Your current relationship theme points toward emotional clarity and honest communication. Take time to understand what you genuinely value before making important decisions.","Career Option":"Your current career option theme highlights consistency and skill-building. Small improvements repeated over time may create stronger opportunities than rushed decisions.",Money:"Your financial theme emphasizes patience and discipline. Pay attention to habits, avoid impulsive decisions and focus on building long-term stability.","Your Personality":"Your personality theme highlights curiosity, independence and self-improvement. You may benefit from expressing your ideas more confidently while staying open to different perspectives.",Future:"Your life-path theme suggests that adaptability and consistency may be important during your next phase. Keep learning and allow your direction to develop naturally.",HiddenTalent:"Your hidden-talent theme points toward abilities that may become stronger when you experiment, practice and trust your natural interests."})[getTopicKey(userData.topic)]}
+function generateHindiInsight(){return({Love:"आपके रिश्तों से जुड़ी वर्तमान थीम भावनात्मक स्पष्टता और ईमानदार संवाद की ओर संकेत करती है। महत्वपूर्ण निर्णय लेने से पहले यह समझने का प्रयास करें कि आपके लिए वास्तव में क्या महत्वपूर्ण है।","Career Option":"आपकी वर्तमान करियर थीम निरंतरता और नई स्किल सीखने पर जोर देती है। समय के साथ किए गए छोटे सुधार जल्दबाजी में लिए गए फैसलों की तुलना में बेहतर अवसर बना सकते हैं।",Money:"आपकी वित्तीय थीम धैर्य और अनुशासन पर जोर देती है। अपनी आदतों पर ध्यान दें, जल्दबाजी में वित्तीय निर्णय लेने से बचें और लंबे समय की स्थिरता पर ध्यान दें।","Your Personality":"आपकी व्यक्तित्व थीम जिज्ञासा, स्वतंत्र सोच और खुद को बेहतर बनाने की इच्छा को दर्शाती है। अपने विचारों को अधिक आत्मविश्वास के साथ व्यक्त करना आपके लिए उपयोगी हो सकता है।",Future:"आपकी जीवन-दिशा से जुड़ी थीम बताती है कि आने वाले चरण में परिस्थितियों के अनुसार ढलना और निरंतरता महत्वपूर्ण हो सकती है। सीखते रहें और अपनी दिशा को धीरे-धीरे विकसित होने दें।",HiddenTalent:"आपकी hidden-talent theme उन क्षमताओं की ओर संकेत करती है जो experiment, practice और अपनी natural रुचियों पर भरोसा करने से मजबूत हो सकती हैं।"})[getTopicKey(userData.topic)]}
+function closeReport(){document.getElementById("reportScreen").classList.remove("active");document.body.style.overflow="";scheduleActivityToast()}
+function openReportPlanCheckout(plan){
+  selectedPlan=plan;
+  hideActivityToast(true);
+  document.getElementById("reportScreen").classList.remove("active");
+  document.body.style.overflow="hidden";
+  document.getElementById("wizardOverlay").classList.add("active");
+  handlePayment(plan);
+}
+function toggleFaq(button){const item=button.closest(".faq-item"),open=item.classList.contains("open");document.querySelectorAll(".faq-item").forEach(el=>{el.classList.remove("open");const p=el.querySelector(".faq-question span:last-child");if(p)p.textContent="+"});if(!open){item.classList.add("open");const p=item.querySelector(".faq-question span:last-child");if(p)p.textContent="−"}}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(document.getElementById("wizardOverlay").classList.contains("active"))closeWizard();if(document.getElementById("reportScreen").classList.contains("active"))closeReport()}});
+
+const activityNames=["Rohan","Priya","Aman","Neha","Arjun","Sneha","Rahul","Ananya","Vikram","Kavya","Aditya","Simran","Karan","Meera","Riya","Yash","Aarav","Ishita","Vihaan","Aditi","Kabir","Nisha","Dev","Pooja","Aryan","Tanya","Rajat","Sakshi","Manav","Diya","Kunal","Mahi","Varun","Shreya","Harsh","Avni","Nikhil","Muskan","Abhishek","Anjali","Sahil","Isha","Rohit","Komal","Ayush","Palak","Mohit","Khushi","Saurabh","Ritika","Akash","Navya","Parth","Manya","Vivek","Sonia","Dhruv","Tia","Rishabh","Jiya","Ankit","Preeti"];
+const activityMinutes=["1 min ago","2 min ago","3 min ago","4 min ago","5 min ago"];
+let activityTimer=null,activityHideTimer=null,activityRunning=true;
+function randomActivityItem(){
+  const name=activityNames[Math.floor(Math.random()*activityNames.length)];
+  const minute=activityMinutes[Math.floor(Math.random()*activityMinutes.length)];
+  return {name,minute};
+}
+function randomizeActivityPosition(){
+  const toast=document.getElementById("activityToast");
+  if(!toast)return;
+  const previewOpen=document.getElementById("previewScreen")?.classList.contains("active");
+  toast.style.right="auto";
+  toast.style.bottom="auto";
+  if(previewOpen){
+    // Plan-buying/preview page: always top-left.
+    toast.style.left=window.innerWidth<=600?"12px":"18px";
+    toast.style.top=window.innerWidth<=600?"72px":"82px";
+  }else{
+    // Home page: keep the existing bottom-right position.
+    toast.style.left="auto";
+    toast.style.right=window.innerWidth<=600?"12px":"18px";
+    toast.style.top="auto";
+    toast.style.bottom=window.innerWidth<=600?"14px":"22px";
+  }
+}
+function showActivityToast(){
+  const toast=document.getElementById("activityToast");
+  if(!toast||!activityRunning||document.getElementById("wizardOverlay").classList.contains("active")||document.getElementById("loadingScreen").classList.contains("active"))return scheduleActivityToast();
+  const item=randomActivityItem();
+  randomizeActivityPosition();
+  document.getElementById("activityName").textContent=item.name;
+  document.getElementById("activityText").textContent=currentLang==="hi"?"ने report खरीदी":"just bought a report";
+  document.getElementById("activityTime").textContent=item.minute;
+  toast.classList.add("show");
+  clearTimeout(activityHideTimer);
+  activityHideTimer=setTimeout(()=>toast.classList.remove("show"),2200);
+  clearTimeout(activityTimer);
+  activityTimer=setTimeout(showActivityToast,3000+Math.floor(Math.random()*1000));
+}
+function scheduleActivityToast(){
+  clearTimeout(activityTimer);
+  if(!activityRunning)return;
+  activityTimer=setTimeout(showActivityToast,3000+Math.floor(Math.random()*1000));
+}
+function hideActivityToast(pause=false){
+  const toast=document.getElementById("activityToast");
+  if(toast)toast.classList.remove("show");
+  clearTimeout(activityHideTimer);
+  clearTimeout(activityTimer);
+  if(pause){activityRunning=false;return}
+  activityRunning=true;
+  scheduleActivityToast();
+}
+window.addEventListener("load",()=>{activityRunning=true;setTimeout(showActivityToast,3000)});
+window.addEventListener("resize",()=>{if(document.getElementById("activityToast")?.classList.contains("show"))randomizeActivityPosition()});
+</script>
+</body>
+</html>
+ 
